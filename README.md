@@ -12,7 +12,9 @@ import SwiftyShellScript
     /* rendering scripts */
     
 let a = Item(identifier: "test", input: "this is a test variable", taskType: .variable)
-let renderSet = [a]
+let b = Item(identifier: "§§hi", input: "this is a custom tag", taskType: .custom)
+let c = Item(identifier: "getDate", function: { input in input.doSomething() }, taskType: .function)
+let renderSet = [a, b, c]
 
 let script = shellScriptRenderer("/Users/admin/Documents/test.sh")
 script.render(renderSet)
@@ -117,7 +119,7 @@ To initiate your custom tag, create a render element with the task type .custom:
 The custom tag in this example is "§§hi" and is replaced by "this is a custom tag".
 
 ```swift
-let a = Item(identifier: "§§hi", input: "this is a custom tag", taskType: .variable)
+let a = Item(identifier: "§§hi", input: "this is a custom tag", taskType: .custom)
 ```
 
 #### Create the render set
