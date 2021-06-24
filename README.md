@@ -20,7 +20,7 @@ Add SwiftyShellScript as a dependency to your `Package.swift`:
 
 ```swift
 dependencies: [
-.package(url: "https://github.com/gregorFeigel/SwiftyShellScript.git", .branch("main"))
+.package(url: "https://github.com/gregorFeigel/SwiftyShellScript.git", .branch("main")) // from: 0.0.1 
 ]
 ```
 
