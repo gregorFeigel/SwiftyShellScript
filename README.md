@@ -187,28 +187,28 @@ script.chmod(to: 493, .octalNumber)
 
 ## script Info
 
-### check if file exists
+#### check if file exists
 
 ```swift
 let info = scriptInfo(path: /Users/admin/Documents/test.sh")
 info.checkIfFileExits() // -> Bool
 ```
 
-### get file size
+#### get file size
 
 ```swift
 let info = scriptInfo(path: /Users/admin/Documents/test.sh")
 info.getFileSize(.byte) // -> Double,  options: .kiloByte, .megaByte, .gigaByte
 ```
 
-### get group owner account name
+#### get group owner account name
 
 ```swift
 let info = scriptInfo(path: /Users/admin/Documents/test.sh")
 info.getGroupOwnerAccountName() // -> String e.g.: "stuff"
 ```
 
-### get posix permissions
+#### get posix permissions
 
 ```swift
 let info = scriptInfo(path: /Users/admin/Documents/test.sh")
@@ -216,27 +216,27 @@ info.getPosixPermissions(as: .int) // -> e.g.: 755
 info.getPosixPermissions(as: .octalNumber) // -> e.g.: 493
 ```
 
-### get group owner account name
+#### get group owner account name
 
 ```swift
 let info = scriptInfo(path: /Users/admin/Documents/test.sh")
 info.getFileType() // -> String e.g.: "NSFileTypeRegular"
 ```
 
-### get file creation date
+#### get file creation date
 
 ```swift
 let info = scriptInfo(path: /Users/admin/Documents/test.sh")
 info.getCreationDate() // -> Date 
 ```
 
-### get file modification date
+#### get file modification date
 
 ```swift
 let info = scriptInfo(path: /Users/admin/Documents/test.sh")
 info.getModificationDate() // -> Date 
 ```
-### change file permissions 
+#### change file permissions 
 
 ```swift
 let info = scriptInfo(path: /Users/admin/Documents/test.sh")
