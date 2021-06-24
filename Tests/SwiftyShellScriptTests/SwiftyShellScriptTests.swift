@@ -15,7 +15,7 @@
                         
             let script = shellScriptRenderer("/Users/Gregor/Documents/Test.sh")
             script.render(Array)
-            script.exportTo("/Users/Gregor/Documents/cTest.sh", overwrite: .force)
+            _ = script.exportTo("/Users/Gregor/Documents/cTest.sh", overwrite: .force)
             
             XCTAssertEqual(script.chmod(to: 755, .int), true)
         }

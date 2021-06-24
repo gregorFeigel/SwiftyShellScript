@@ -48,7 +48,9 @@ public class shellScriptRenderer {
     //MARK: - render file
     
     
-    ///  render the script
+    /* task type handler */
+    
+    ///  handle the task type and run the sub functions
     /// - Parameter t: struct of the item to replace with, the replacement value and the task type (custom, variable, function).
     
     public func render(_ t: [Item] ){
@@ -68,6 +70,15 @@ public class shellScriptRenderer {
     
     
     
+    
+    /* task type: variable */
+    
+    /// # find the variable identifier and replace it with the input content
+    /// - Parameters:
+    ///   - i: Item struct item - containing the identifier, function, task type and input
+    ///   - script: shell script as string
+    /// - Returns: rendered script as string
+    
     private func variable(i: Item, script: String) -> String {
         
         var shellScript = script
@@ -78,7 +89,18 @@ public class shellScriptRenderer {
     
     
     
+    /* task type: function */
     
+    /// # get the content of the function identifier, run the user function with the function identifier input and replace the function identifier + its input with the result
+    /// # e.g.:
+    /// # #getDate(yyyy-MM-dd HH:mm:ss) - find this function in the script
+    /// # function input: yyyy-MM-dd HH:mm:ss - get the function input
+    /// # execute the user function with the input "yyyy-MM-dd HH:mm:ss"
+    /// # replace #getDate(yyyy-MM-dd HH:mm:ss) with 2021-06-24 17:22:27
+    /// - Parameters:
+    ///   - i: Item struct item - containing the identifier, function, task type and input
+    ///   - script: shell script as string
+    /// - Returns: rendered script as string
     
     private func function(i: Item, script: String) -> String {
         
@@ -96,7 +118,6 @@ public class shellScriptRenderer {
             
         } else {}
         
-        
         return shellScript
         
     }
@@ -105,9 +126,16 @@ public class shellScriptRenderer {
     
     
     //MARK: - export the file
+    
+    /// export the rendered file to export directory
+    /// - Parameters:
+    ///   - dir: export directory as string
+    ///   - overwrite: select overwrite type [sensitive, force]
+    /// - Returns: true if success - else false
     public func exportTo(_ dir: String, overwrite: overwrite = .sensitive) -> Bool {
         
         
+        /* export if overwrite type == force */
         
         if overwrite == .force {
             
@@ -120,6 +148,10 @@ public class shellScriptRenderer {
             } catch { return false }
             
         }
+        
+        
+        /* export if overwrite type == sensitive */
+        
         else if overwrite == .sensitive {
             
             if checkIfFileExits(dir) == true { return false } else {
@@ -135,6 +167,10 @@ public class shellScriptRenderer {
             }
             
         }
+        
+        
+        /* export if overwrite type is not set */ // this is basically not needed
+        
         else {
             
             if checkIfFileExits(dir) == true { return false } else {
@@ -151,41 +187,58 @@ public class shellScriptRenderer {
             
         }
         
+        
+        
     }
     
     
+    
+    //MARK: -  change posix permissions
+    
+    /// change mod of file
+    /// - Parameters:
+    ///   - to: posixPermissions as int or as octal number
+    ///   - t: number typ [octalNumber, int]
+    /// - Returns: true if success - else false
     public func chmod(to: Int16, _ t: numberType) -> Bool {
         
+        let fm = FileManager.default
         var number = Int16()
+        var attributes = [FileAttributeKey : Any]()
+        attributes[.posixPermissions] = number // to
+        
+        /* get correct number format for setAttributes */
         
         if t == .int {
+            
+            // int to octal number
             
             let decimal = 755
             let intToStr = "\(decimal)"
             let octal = Int(intToStr, radix: 8)
             number = Int16(octal!)
+            
         }
+        
+        // if input == octal number just apply to number variable
+        
         else if t == .octalNumber { number = to }
         
         
+        /* change posixPermissions for file at renderedShellScriptPath */
         
-        
-        print(renderedShellScriptPath)
+        // check if file exists - else return false
         if checkIfFileExits(renderedShellScriptPath) {
-            print("exists")
-            let fm = FileManager.default
             
-            var attributes = [FileAttributeKey : Any]()
-            attributes[.posixPermissions] = number // to
             do {
+                
                 try fm.setAttributes(attributes, ofItemAtPath: renderedShellScriptPath)
-            }catch let error {
-                print("Permissions error: ", error)
-            }
+                
+            } catch { return false  }
+            
             return true
-        } else {
-            return false
-        }
+            
+        } else { return false }
         
         
     }
@@ -195,6 +248,14 @@ public class shellScriptRenderer {
     
     
 }
+
+
+
+
+
+
+
+
 
 //MARK: - enum and structs
 
