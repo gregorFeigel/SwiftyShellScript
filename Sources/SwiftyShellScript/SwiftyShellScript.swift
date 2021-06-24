@@ -110,7 +110,7 @@ public class shellScriptRenderer {
             
             let input = script.getContentBetween(from: "#\(i.identifier)(", to: ")")
             
-            shellScript = shellScript.replaced(from: "#\(i.identifier)(", to: ")", by: "")
+            shellScript = shellScript.replaceBetween(from: "#\(i.identifier)(", to: ")", by: "")
             
             let t = i.function!(input ?? "error")
             

@@ -16,11 +16,7 @@ func readFileAtDirection(path: String) -> String {
     
     let filename = URL(fileURLWithPath: path)
     
-    do {
-        
-        return try String(contentsOf: filename, encoding: .utf8)
-        
-    }
+    do { return try String(contentsOf: filename, encoding: .utf8)  }
     catch { return "error" }
     
 }

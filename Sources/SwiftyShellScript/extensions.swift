@@ -18,7 +18,7 @@ extension String {
       }
     
     
-    func replaced(from: String, to: String, by new: String) -> String {
+    func replaceBetween(from: String, to: String, by new: String) -> String {
         guard let from = range(of: from)?.upperBound, let to = range(of: to)?.lowerBound else { return self }
         
         let range = from..<to
