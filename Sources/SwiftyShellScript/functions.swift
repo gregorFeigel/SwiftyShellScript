@@ -20,3 +20,8 @@ func readFileAtDirection(path: String) -> String {
     catch { return "error" }
     
 }
+
+func getDocumentsDirectory() -> URL {
+    let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+    return paths[0]
+}
