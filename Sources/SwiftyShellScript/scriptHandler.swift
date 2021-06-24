@@ -28,10 +28,10 @@ public class scriptInfo {
     /// - Parameter t: file path as string e.g. /home/user/Documents/test.sh
     /// - Returns: true if file exits
     
-    private func checkIfFileExits(_ t: String) -> Bool {
+    public func checkIfFileExits() -> Bool {
         
         let fileManager = FileManager.default
-        if fileManager.fileExists(atPath: t) {
+        if fileManager.fileExists(atPath: path) {
             return true
         } else {
             return false
@@ -39,6 +39,17 @@ public class scriptInfo {
         
     }
     
+    
+    private func checkIfFileExits(_ t: String) -> Bool {
+       
+       let fileManager = FileManager.default
+       if fileManager.fileExists(atPath: t) {
+           return true
+       } else {
+           return false
+       }
+       
+   }
     
     //MARK: -  get posix permissions
     

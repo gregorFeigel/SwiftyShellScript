@@ -3,7 +3,7 @@
     
     /*
     
-    For testing download the testing files and move them into Documents/
+   Please read the testMater.swift file 
     
     */
     
@@ -12,10 +12,10 @@
         
         
         
-        let oriPath = getDocumentsDirectory().appendingPathComponent("Test.sh").path
-        let exportPath = getDocumentsDirectory().appendingPathComponent("rTest.sh").path
-        let correctRenderedScript = readFileAtDirection(path: getDocumentsDirectory().appendingPathComponent("cTest.sh").path)
-        let correctScript = readFileAtDirection(path: getDocumentsDirectory().appendingPathComponent("Test.sh").path)
+        let oriPath = dir(withPath: "/Test.sh")
+        let exportPath = dir(withPath: "/rTest.sh")
+        let correctRenderedScript = readFileAtDirection(path: dir(withPath: "/cTest.sh"))
+        let correctScript = readFileAtDirection(path: dir(withPath: "/Test.sh"))
         
         
         /* everything should work here */
@@ -140,17 +140,4 @@
     }
     
     
-    @discardableResult
-    func shell(_ args: String...) -> String {
-        let task = Process()
-        let pipe = Pipe()
-        task.launchPath = "/bin/bash/"
-        task.arguments = args
-        task.launch()
-        task.waitUntilExit()
-        
-        let data = pipe.fileHandleForReading.readDataToEndOfFile()
-        let output = String(data: data, encoding: .utf8)!
-        return output
-    }
-    
+
