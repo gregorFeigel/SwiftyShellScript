@@ -1,6 +1,6 @@
 # SwiftyShellScript
 
-Dynamic scripting made easy in Swift
+Dynamic scripting made easy with Swift
 
 ```swift
 import SwiftyShellScript
@@ -28,7 +28,7 @@ dependencies: [
 
 ### Create a render set
 
-For rendering the script you need to create a render set. 
+To render the script, you need to create a render set.
 Therefor you have three task type options:
 
 #### Variable
@@ -41,7 +41,7 @@ A variable is defined by using #(yourVarName) in your shell script.
 exit
 ```
 
-To init your variable, create a render item with the task typ .variable: <br/>
+To initiate your variable, create a render element with the task type .variable: <br/>
 The variable name in this example is "hello" and will be replaced with "this is a test variable".
 
 ```swift
@@ -59,8 +59,8 @@ A function is defined by using #yourFunction(functionInput) in your shell script
 exit
 ```
 
-To init your function, create a render item with the task typ .function: <br/>
-The function name in this example is "getDate" and will be replaced with the result (String) of your function you define in the init.
+To initiate your function, create a render element with the task type .function: <br/>
+The function name in this example is "getDate" and will be replaced with the result (String) of your function you define in the funtion init.
 
 ```swift
 let a = Item(identifier: "getDate", function: { input in input.getDate() }, taskType: .function)
@@ -77,7 +77,7 @@ extension String {
     
 }
 ```
-The rendered script will now be:
+The rendered script now looks like this:
 
 ```
 #!/bin/sh
@@ -87,15 +87,15 @@ exit
 
 #### Custom 
 
-With the custom tag you can define anything and replace it by the input parameter.
+With the custom tag you can define anything and replace it with the input parameter.
 
 ```
 #!/bin/sh
 §§hi // custom tag §§hi
 exit
 ```
-To init your custom tag, create a render item with the task typ .custom: <br/>
-The custom tag in this example is "§§hi" and will be replaced with "this is a custom tag".
+To initiate your custom tag, create a render element with the task type .custom: <br/>
+The custom tag in this example is "§§hi" and is replaced by "this is a custom tag".
 
 ```swift
 let a = Item(identifier: "§§hi", input: "this is a custom tag", taskType: .variable)
@@ -103,7 +103,7 @@ let a = Item(identifier: "§§hi", input: "this is a custom tag", taskType: .var
 
 #### Create the render set
 
-Create the render set by simply adding the single items into an array:
+Create the render set by simply putting the individual elements together into an array:
 
 ```swift
 let a = Item(identifier: "test", input: "this is a test variable", taskType: .variable)
@@ -114,7 +114,7 @@ let renderSet = [a, b])
 
 ### Choose the script 
 
-You open the script render by passing the file path: 
+Open the script render by passing the file path: 
 
 ```swift
 let script = shellScriptRenderer("/Users/admin/Documents/test.sh")
@@ -122,7 +122,7 @@ let script = shellScriptRenderer("/Users/admin/Documents/test.sh")
 
 ### Render the script 
 
-Render the script by passing the renderSet array into the renderer.
+Render the script by passing the render set array into the renderer.
 
 ```swift
 let script = shellScriptRenderer("/Users/admin/Documents/test.sh")
@@ -132,7 +132,7 @@ script.render(renderSet)
 ### Export the rendered script
 
 Export the rendered script to a new path.
-With the option .force and .sensitive you can decide if the export task should overwrite the file if its already existing or not. By default it is set to .sensitive.
+With the options .force and .sensitive you can decide whether the export job should overwrite the file, if it already exists or not. It is set to .sensitive by default.
 
 ```swift
 let script = shellScriptRenderer("/Users/admin/Documents/test.sh")
@@ -148,7 +148,7 @@ script.exportTo("/Users/admin/Documents/renderedTest.sh", overwrite: .sensitive)
 
 ### Change file permissions 
 
-Change file permissions by using .chmod.
+Change file permissions by using .chmod(to: ).
 
 ```swift
 let script = shellScriptRenderer("/Users/admin/Documents/test.sh")
