@@ -24,7 +24,7 @@ script.chmod(to: 755, .int)
 
     /* working with files */
 
-let info = scriptInfo(path: /Users/admin/Documents/test.sh")
+let info = scriptInfo(path: "/Users/admin/Documents/test.sh")
 info.getFileType()
 info.getGroupOwnerAccountName()
 info.getPosixPermissions(as: .int)

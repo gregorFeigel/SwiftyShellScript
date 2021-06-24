@@ -65,14 +65,12 @@ public class scriptInfo {
         catch let error {
             print(error.localizedDescription)
         }
-        print(poisix)
-        if t == .octalNumber { return poisix }
+         if t == .octalNumber { return poisix }
         
         else {
             
             let octString = String(poisix, radix: 0o10, uppercase: false)
-            print(octString)
-            return Int16(octString) ?? -9999
+             return Int16(octString) ?? -9999
         }
         
     }
