@@ -1,5 +1,5 @@
 # SwiftyShellScript
-[![License: MIT](https://img.shields.io/github/license/gregorFeigel/SwiftyShellScript)](https://github.com/gregorFeigel/SwiftyShellScript/license)
+[![License: MIT](https://img.shields.io/github/license/gregorFeigel/SwiftyShellScript)](https://github.com/gregorFeigel/SwiftyShellScript/LICENCE)
 
 Dynamic scripting made easy with Swift
 
