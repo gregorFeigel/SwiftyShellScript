@@ -1,6 +1,13 @@
     import XCTest
     @testable import SwiftyShellScript
     
+    /*
+    
+    For testing download the testing files and move them into Documents/
+    
+    */
+    
+    
     final class SwiftyShellScriptTests: XCTestCase {
         
         
