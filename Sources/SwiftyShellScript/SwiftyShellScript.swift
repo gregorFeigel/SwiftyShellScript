@@ -215,9 +215,7 @@ public class shellScriptRenderer {
         if t == .int {
             
             // int to octal number
-            
-            let decimal = 755
-            let intToStr = "\(decimal)"
+            let intToStr = "\(to)"
             let octal = Int(intToStr, radix: 8)
             number = Int16(octal!)
             

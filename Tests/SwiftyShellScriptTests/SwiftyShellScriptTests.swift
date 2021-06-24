@@ -28,7 +28,13 @@
             script.render(Array)
             XCTAssertEqual(script.renderedShellScript, correctRenderedScript)
             XCTAssertEqual(script.exportTo(exportPath, overwrite: .force), true)
-            XCTAssertEqual(script.chmod(to: 755, .int), true)
+            XCTAssertEqual(script.chmod(to: 555, .int), true)
+            
+            // check if posix permissions where changed correctly
+            
+            let info = scriptInfo(path: exportPath)
+            XCTAssertEqual(info.getPosixPermissions(as: .int), 555)
+
             
         }
         
