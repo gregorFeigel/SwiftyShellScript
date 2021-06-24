@@ -1,0 +1,163 @@
+# SwiftyShellScript
+
+Dynamic scripting made easy in Swift
+
+```swift
+import SwiftyShellScript
+
+let a = Item(identifier: "test", input: "this is a test variable", taskType: .variable)
+let renderSet = [a]
+
+let script = shellScriptRenderer("/Users/admin/Documents/test.sh")
+script.render(renderSet)
+script.exportTo("/Users/admin/Documents/renderedTest.sh")
+script.chmod(to: 755, .int)
+```
+
+## Installation
+### Swift Package Manager
+Add SwiftyShellScript as a dependency to your `Package.swift`:
+
+```swift
+dependencies: [
+.package(url: "https://github.com/gregorFeigel/SwiftyShellScript.git", .branch("main"))
+]
+```
+
+## Usage
+
+### Create a render set
+
+For rendering the script you need to create a render set. 
+Therefor you have three task type options:
+
+#### Variable
+
+A variable is defined by using #(yourVarName) in your shell script.
+
+```
+#!/bin/sh
+#(hello) // variable hello
+exit
+```
+
+To init your variable, create a render item with the task typ .variable: <br/>
+The variable name in this example is "hello" and will be replaced with "this is a test variable".
+
+```swift
+let a = Item(identifier: "hello", input: "this is a test variable", taskType: .variable)
+```
+
+
+#### Function
+
+A function is defined by using #yourFunction(functionInput) in your shell script.
+
+```
+#!/bin/sh
+#getDate(yyyy-MM-dd HH:mm:ss) // function "getDate" with input "yyyy-MM-dd HH:mm:ss"
+exit
+```
+
+To init your function, create a render item with the task typ .function: <br/>
+The function name in this example is "getDate" and will be replaced with the result (String) of your function you define in the init.
+
+```swift
+let a = Item(identifier: "getDate", function: { input in input.getDate() }, taskType: .function)
+
+extension String {
+    
+    func getDate() -> String {
+        
+        let dateFormat = DateFormatter()
+        dateFormat.dateFormat = self
+        return dateFormat.string(from: Date()) + " - input format:" + self
+        
+    }
+    
+}
+```
+The rendered script will now be:
+
+```
+#!/bin/sh
+2021-06-24 10:34:04 - input format: yyyy-MM-dd HH:mm:ss
+exit
+```
+
+#### Custom 
+
+With the custom tag you can define anything and replace it by the input parameter.
+
+```
+#!/bin/sh
+§§hi // custom tag §§hi
+exit
+```
+To init your custom tag, create a render item with the task typ .custom: <br/>
+The custom tag in this example is "§§hi" and will be replaced with "this is a custom tag".
+
+```swift
+let a = Item(identifier: "§§hi", input: "this is a custom tag", taskType: .variable)
+```
+
+#### Create the render set
+
+Create the render set by simply adding the single items into an array:
+
+```swift
+let a = Item(identifier: "test", input: "this is a test variable", taskType: .variable)
+let b = Item(identifier: "test2", input: "this is a second test variable", taskType: .variable)
+let renderSet = [a, b])
+```
+
+
+### Choose the script 
+
+You open the script render by passing the file path: 
+
+```swift
+let script = shellScriptRenderer("/Users/admin/Documents/test.sh")
+```
+
+### Render the script 
+
+Render the script by passing the renderSet array into the renderer.
+
+```swift
+let script = shellScriptRenderer("/Users/admin/Documents/test.sh")
+script.render(renderSet)
+```
+
+### Export the rendered script
+
+Export the rendered script to a new path.
+With the option .force and .sensitive you can decide if the export task should overwrite the file if its already existing or not. By default it is set to .sensitive.
+
+```swift
+let script = shellScriptRenderer("/Users/admin/Documents/test.sh")
+script.render(renderSet)
+script.exportTo("/Users/admin/Documents/renderedTest.sh")
+
+// force overwriting 
+script.exportTo("/Users/admin/Documents/renderedTest.sh", overwrite: .force)
+
+// sensitive 
+script.exportTo("/Users/admin/Documents/renderedTest.sh", overwrite: .sensitive)
+```
+
+### Change file permissions 
+
+Change file permissions by using .chmod.
+
+```swift
+let script = shellScriptRenderer("/Users/admin/Documents/test.sh")
+script.render(renderSet)
+script.exportTo("/Users/admin/Documents/renderedTest.sh", overwrite: .sensitive)
+
+// input as int
+script.chmod(to: 755, .int)
+
+//input as octal number
+script.chmod(to: 0o755, .octalNumber)
+```
