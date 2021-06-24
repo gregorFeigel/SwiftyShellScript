@@ -46,52 +46,6 @@
         }
         
         
-        
-        /* wrong input path */
-        
-        func testFalsePath() {
-            
-            let a = Item(identifier: "test", input: "everything worked!", taskType: .variable)
-            
-            let b = Item(identifier: "getDate", function: { r in r.getDate() }, taskType: .function)
-            
-            let c = Item(identifier: "§§hi", input: "this is a custom tag", taskType: .custom)
-            
-            let Array = [a, b, c]
-            
-            let script = shellScriptRenderer(oriPath)
-            XCTAssertEqual(script.readFile(), correctScript)
-            script.render(Array)
-            XCTAssertEqual(script.renderedShellScript, correctRenderedScript)
-            XCTAssertEqual(script.exportTo(exportPath, overwrite: .force), true)
-            XCTAssertEqual(script.chmod(to: 755, .int), true)
-            
-        }
-        
-        
-        
-        /* empty function */
-        
-        func testEmptyFunctionInput() {
-            
-            let a = Item(identifier: "test", input: "everything worked!", taskType: .variable)
-            
-            let b = Item(identifier: "getDate", function: { r in r.getDate() }, taskType: .function)
-            
-            let c = Item(identifier: "§§hi", input: "this is a custom tag", taskType: .custom)
-            
-            let Array = [a, b, c]
-            
-            let script = shellScriptRenderer(oriPath)
-            XCTAssertEqual(script.readFile(), correctScript)
-            script.render(Array)
-            XCTAssertEqual(script.renderedShellScript, correctRenderedScript)
-            XCTAssertEqual(script.exportTo(exportPath, overwrite: .force), true)
-            XCTAssertEqual(script.chmod(to: 755, .int), true)
-            
-        }
-        
-        
     }
     
     

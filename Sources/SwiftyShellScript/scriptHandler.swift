@@ -8,7 +8,7 @@
 import Foundation
 
 
-/* beta tasks */
+    /* not complete */
 
 public class scriptInfo {
     
