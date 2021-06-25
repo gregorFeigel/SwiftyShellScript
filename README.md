@@ -34,6 +34,15 @@ info.getModificationDate()
 info.getCreationDate() 
 info.chmod(to: 755, .int)
 ```
+```
+#!/bin/sh
+echo "this is a dynamic shell script"
+#(test) // variable hello
+#getDate() // function getDate
+§§hi // custom tag §§hi
+exit
+```
+
 
 ## Installation
 ### Swift Package Manager
