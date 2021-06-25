@@ -71,6 +71,15 @@ final class scriptHandler: XCTestCase {
     }
     
     
+    func testRename() {
+    
+        let info = scriptInfo(path: txt)
+        XCTAssertEqual(info.rename(to: "ttttttttttttttttttt.txt"), true)
+        XCTAssertEqual(info.rename(to: "testFile.txt"), true)
+        
+    }
+    
+    
 
     // FIXME: - error comparing two dates
     
