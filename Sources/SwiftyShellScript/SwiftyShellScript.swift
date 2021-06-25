@@ -2,14 +2,18 @@
 //  File.swift
 //
 //
-//  Created by Gregor Feigel on 25.06.21.
+//  Created by Gregor Feigel on 24.06.21.
 //
 
 import Foundation
 
 /*
  
- shell script renderer
+  shell script renderer
+ 
+ - get shell script content
+ - replace variables- and custom tags with the input value
+ - replace functions tags with the output of the user defined function - containing the function input - result
  
 */
 

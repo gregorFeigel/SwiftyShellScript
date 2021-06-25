@@ -9,7 +9,24 @@ import Foundation
 import Queuer
 import Darwin
 
-/* not complete */
+
+/*
+ 
+ run shell script
+ 
+ - timeout handler -> if task it not done in n seconds the task will be terminated
+ - return error and standard output separate
+ - return only error output
+ - return Bool - if error occurred or not
+ - no output, just realtime printing the output
+ 
+*/
+
+
+
+
+
+/* in progress */
 
 public class runScript {
     

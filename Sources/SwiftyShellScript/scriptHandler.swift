@@ -5,12 +5,37 @@
 //  Created by Gregor Feigel on 24.06.21.
 //
 
+
+/**
+ 
+ file information
+ 
+ - get file information:
+     - file creation date
+     - file modification date
+     - file size
+     - file posix permissions
+     - file type
+     - file group owner account name
+
+ - check if file exists
+ 
+ - modify file information:
+     - file posix permissions
+     - file name
+ 
+ 
+ */
+
+ 
+
 import Foundation
 
-
-/* not complete */
-
 public class scriptInfo {
+    
+    
+    // TODO: code documentation
+    // TODO: get all file info
     
     
     public init(path: String) {
@@ -39,7 +64,8 @@ public class scriptInfo {
         
     }
     
-    
+//    Add an Important callout to a playground or to the Quick Help
+
     private func checkIfFileExits(_ t: String) -> Bool {
         
         let fileManager = FileManager.default
@@ -184,7 +210,9 @@ public class scriptInfo {
     
     
     
-    //MARK: - eddeting
+    //MARK: - modification
+    
+    // TODO:  functions for all modifiable infos
     
     
     //MARK: - rename file
