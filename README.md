@@ -37,7 +37,7 @@ info.chmod(to: 755, .int)
 ```
 #!/bin/sh
 echo "this is a dynamic shell script"
-#(test) // variable hello
+#(test) // variable test
 #getDate() // function getDate
 §§hi // custom tag §§hi
 exit
