@@ -33,6 +33,7 @@ info.getFileSize(.byte)
 info.getModificationDate()
 info.getCreationDate() 
 info.chmod(to: 755, .int)
+info.rename(to: "testFile.sh")
 ```
 ```
 #!/bin/sh
