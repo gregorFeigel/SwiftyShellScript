@@ -39,6 +39,60 @@ extension String {
         return replaced
     }
     
+    func remove(items: [String]) -> String {
+        
+        var replaced = self
+        
+        for n in items {
+            replaced = replaced.replacingOccurrences(of: n, with: "")
+            
+        }
+        
+        return replaced
+    }
+    
     
 
+}
+
+extension Array where Element == String {
+    
+mutating func removeFromArray(txt: String) {
+    
+    if self.contains(txt) {
+        
+        if let index = self.firstIndex(of: txt) {
+            self.remove(at: index)
+        }
+        
+    } else {}
+    
+    
+    
+}
+
+
+mutating func removeAllFromArray(txt: String) {
+    
+    if self.contains(txt) {
+        
+        self.removeAll(where: { txt.contains($0) })
+        
+    } else {}
+    
+    
+    
+}
+
+mutating func removeAllEmptyItemsFromArray() {
+    
+    if self.contains("") {
+        
+        self.removeAll(where: { $0.isEmpty })
+        
+    } else {}
+    
+    
+    
+}
 }
