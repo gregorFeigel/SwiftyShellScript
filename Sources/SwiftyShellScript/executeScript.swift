@@ -20,7 +20,7 @@ public class runScript {
     public var scriptPath : String
     public var lunchPath : String = "/bin/bash"
     public var arg : String = "-c"
-    public var timeout : TimeInterval = 15
+    public var timeout : TimeInterval = 300 // intervall time in sec 
     
     public func shellPipe()  -> (output: String, error: String) {
         
@@ -41,7 +41,6 @@ public class runScript {
         
         return sh
     }
-    
     
     public func shellBool()  -> Bool {
         
