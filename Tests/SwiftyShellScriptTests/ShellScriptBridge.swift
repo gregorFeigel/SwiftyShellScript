@@ -27,6 +27,10 @@ final class shellBridge: XCTestCase {
         let Script = ShellScripts(mainDir).function("greet", param: "")
         print(Script.output + "\n" + Script.error)
         
+//        let Script = ShellScripts(mainDir).test()
+         
+        
+        
     }
     
     
