@@ -5,8 +5,6 @@
 //  Created by Gregor Feigel on 25.06.21.
 //
 
-import Foundation
-
 /*
  
  - check if bundle contains a "shellScript" folder and get all scripts from there
@@ -15,7 +13,7 @@ import Foundation
  */
 
 /*
-
+ 
  Bridge header:
  
  # /* SwiftyShellScript Bridge
@@ -26,28 +24,32 @@ import Foundation
  #
  # */End
  
-*/
+ */
 
+
+/* in progress */
+
+import Foundation
 
 public class ShellScripts {
     
     
     public init(_ path: URL? = Bundle.main.resourceURL?.appendingPathComponent("/shellScript")) { //, location: location? = .bundle
         self.path = path
-//        self.location = location
+        //        self.location = location
         self.initScripts = index(getAllScripts())
     }
     
     
     var path: URL?
-//    var location: location?
+    //    var location: location?
     
     //MARK: - run function
     
     var initScripts : [shellScript] = []  //[]
     
     public func function(_ t: String, param: String, timeout: TimeInterval? = 300) -> (output: String, error: String) {
- 
+        
         // get the script that the function contains
         var scriptPath = ""
         
@@ -70,7 +72,7 @@ public class ShellScripts {
     
     public func  test() {
         
-    let t = index(getAllScripts())
+        let t = index(getAllScripts())
         
         for n in t {
             
@@ -94,7 +96,7 @@ public class ShellScripts {
                 let enumerator = FileManager.default.enumerator(at: shellScriptFolder!,
                                                                 includingPropertiesForKeys: resourceKeys,
                                                                 options: [.skipsHiddenFiles], errorHandler: { (url, error) -> Bool in
-                                                                     return true
+                                                                    return true
                                                                 })!
                 
                 for case let fileURL as URL in enumerator {

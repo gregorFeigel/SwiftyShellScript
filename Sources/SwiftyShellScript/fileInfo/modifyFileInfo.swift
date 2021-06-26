@@ -10,11 +10,13 @@
  file information
  
  - modify file information:
-     - file posix permissions
-     - file name
+ - file posix permissions
+ - file name
  
  
  */
+
+/* in progress */
 
 import Foundation
 
@@ -23,10 +25,10 @@ class modify {
     internal init(path: String) {
         self.path = path
     }
-
+    
     var path: String
     
- 
+    
     // TODO:  functions for all modifiable infos
     
     

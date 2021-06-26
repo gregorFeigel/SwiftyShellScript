@@ -9,13 +9,13 @@ import Foundation
 
 /*
  
-  shell script renderer
+ shell script renderer
  
  - get shell script content
  - replace variables- and custom tags with the input value
  - replace functions tags with the output of the user defined function - containing the function input - result
  
-*/
+ */
 
 
 
@@ -55,7 +55,7 @@ public class shellScriptRenderer {
     /// check if the file exists. if yes, get file content as string else return error message
     /// - Returns: file content as string and "the file \(shellScriptPath.self) does not exist" if the file does not exist
     
-     func readFile() -> String {
+    func readFile() -> String {
         
         if checkIfFileExits(shellScriptPath.self) == true { return readFileAtDirection(path: shellScriptPath.self)  }
         else { return "the file \(shellScriptPath.self) does not exist" }
@@ -223,7 +223,7 @@ public class shellScriptRenderer {
         
         let fm = FileManager.default
         var number = Int16()
-       
+        
         
         /* get correct number format for setAttributes */
         

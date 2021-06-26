@@ -13,18 +13,12 @@ import Foundation
  
  file information
  
- - get file information:
-     - file creation date
-     - file modification date
-     - file size
-     - file posix permissions
-     - file type
-     - file group owner account name
-
+ - get file information
  - check if file exists
  
  */
 
+/* in progress */
 
 private func valueForSelectedKey(_ t: URLResourceKey,  path: URL) -> URLResourceValues { //URLResourceKey URLResourceValues
     
@@ -32,10 +26,10 @@ private func valueForSelectedKey(_ t: URLResourceKey,  path: URL) -> URLResource
     
     do {
         item = try path.resourceValues(forKeys: [t])
-
+        
     } catch let error {
         print(error.localizedDescription)
-         
+        
     }
     
     
@@ -54,7 +48,7 @@ private func valuesForSelectedType(_ t: FileAttributeKey, path: String) -> Any {
     }
     catch let error {
         print(error.localizedDescription)
-         
+        
     }
     return item
     
@@ -72,20 +66,30 @@ private extension fileInfo  { // public extension String {
         }
         
     }
- 
+    
     private func stringToUrl() -> URL {
         return URL(fileURLWithPath: self.path)
     }
 }
 
- 
+
 
 
 
 //MARK: - get file attributes
 
 public extension fileInfo  { // public extension String {
- 
+    
+    func fileExists() -> Bool {
+        
+        let fileManager = FileManager.default
+        if fileManager.fileExists(atPath: self.path) {
+            return true
+        } else {
+            return false
+        }
+    }
+    
     //MARK: - creationDate
     
     func creationDate() -> Date? {
@@ -109,7 +113,7 @@ public extension fileInfo  { // public extension String {
     func posixPermissions(as t: numberType) -> Int16? {
         if self.validatePath() == false { return nil } else {
             let poisix = valuesForSelectedType(.posixPermissions, path: self.path) as! Int16
-             if t == .octalNumber { return poisix }
+            if t == .octalNumber { return poisix }
             
             else {
                 
@@ -117,7 +121,7 @@ public extension fileInfo  { // public extension String {
                 return Int16(octString) ?? nil
             }
             
-         }
+        }
     }
     
     
@@ -233,15 +237,15 @@ public extension fileInfo  { // public extension String {
                 let a = Double(number / 1000)
                 let b = Double(a / 1000)
                 return Double(b / 1000)
-           
-            
+                
+                
+            }
         }
+        
+        
     }
     
     
-}
-    
-  
 }
 
 
@@ -272,7 +276,7 @@ public extension fileInfo {
         }
     }
     
- 
+    
     
     //MARK: - isVolumeKey
     
@@ -289,7 +293,7 @@ public extension fileInfo {
             return valueForSelectedKey(.isPackageKey, path: self.stringToUrl()).isPackage
         }
     }
-  
+    
     //MARK: - isAliasFileKey
     
     func isAliasFileKey() -> Bool? {
@@ -306,7 +310,7 @@ public extension fileInfo {
         }
     }
     
- 
+    
     
     //MARK: - isRegularFileKey
     
@@ -331,15 +335,15 @@ public extension fileInfo {
             return valueForSelectedKey(.addedToDirectoryDateKey, path: self.stringToUrl()).addedToDirectoryDate
         }
     }
-
- 
- 
+    
+    
+    
 }
 
 
 //MARK: - get file key values
 
- 
+
 public enum size {
     case byte
     case kiloByte

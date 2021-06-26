@@ -9,7 +9,7 @@ import Foundation
 
 /*
 
- please download the test files from the testFiles branch and insert below the path to the XCTestSwiftyShellScript folder
+  download the test files from the testFiles branch and insert below the path to the XCTestSwiftyShellScript folder
 
 */
 

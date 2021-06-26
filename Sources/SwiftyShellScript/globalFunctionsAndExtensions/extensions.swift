@@ -10,12 +10,12 @@ import Foundation
 extension String {
     
     func getContentBetween(from: String, to: String) -> String? {
-          return (range(of: from)?.upperBound).flatMap { substringFrom in
-              (range(of: to, range: substringFrom..<endIndex)?.lowerBound).map { substringTo in
-                  String(self[substringFrom..<substringTo])
-              }
-          }
-      }
+        return (range(of: from)?.upperBound).flatMap { substringFrom in
+            (range(of: to, range: substringFrom..<endIndex)?.lowerBound).map { substringTo in
+                String(self[substringFrom..<substringTo])
+            }
+        }
+    }
     
     
     func replaceBetween(from: String, to: String, by new: String) -> String {
@@ -32,7 +32,7 @@ extension String {
         
         for (n ,t) in zip(items, with) {
             if replaced.contains(n) {
-            replaced = replaced.replacingOccurrences(of: n, with: t)
+                replaced = replaced.replacingOccurrences(of: n, with: t)
             } else {}
         }
         
@@ -52,47 +52,47 @@ extension String {
     }
     
     
-
+    
 }
 
 extension Array where Element == String {
     
-mutating func removeFromArray(txt: String) {
-    
-    if self.contains(txt) {
+    mutating func removeFromArray(txt: String) {
         
-        if let index = self.firstIndex(of: txt) {
-            self.remove(at: index)
-        }
+        if self.contains(txt) {
+            
+            if let index = self.firstIndex(of: txt) {
+                self.remove(at: index)
+            }
+            
+        } else {}
         
-    } else {}
-    
-    
-    
-}
-
-
-mutating func removeAllFromArray(txt: String) {
-    
-    if self.contains(txt) {
         
-        self.removeAll(where: { txt.contains($0) })
         
-    } else {}
+    }
     
     
-    
-}
-
-mutating func removeAllEmptyItemsFromArray() {
-    
-    if self.contains("") {
+    mutating func removeAllFromArray(txt: String) {
         
-        self.removeAll(where: { $0.isEmpty })
+        if self.contains(txt) {
+            
+            self.removeAll(where: { txt.contains($0) })
+            
+        } else {}
         
-    } else {}
+        
+        
+    }
     
-    
-    
-}
+    mutating func removeAllEmptyItemsFromArray() {
+        
+        if self.contains("") {
+            
+            self.removeAll(where: { $0.isEmpty })
+            
+        } else {}
+        
+        
+        
+    }
 }
