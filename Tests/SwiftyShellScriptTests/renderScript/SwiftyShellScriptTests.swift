@@ -45,16 +45,18 @@
         }
         
         
+        
         func testAndExecute() {
             
             let a = Item(identifier: "test", input: "#everything worked!", taskType: .variable)
             
             let script = shellScriptRenderer(testExec)
-            script.timeout = 18
+            script.timeout = 6
             script.render([a])
             let t = script.runScript()
             
             print(t.processTime)
+            print(t.timeover)
             print(t.error)
             print(t.taskTerminationStatus)
             print(t.scriptError)

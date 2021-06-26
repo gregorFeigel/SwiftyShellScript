@@ -113,19 +113,31 @@ func shellTimeout(_ command: String, launchPath: String, arg: String, timeOut: T
     task.arguments = [arg, command]
     task.launchPath = launchPath
     
+    let info = ProcessInfo()
+    let begin = info.systemUptime
+    
+    task.launch()
     /* auto kill process if it takes to long */
     
     if timeOut == .infinity {} else {
-        //    DispatchQueue.global(qos: .userInitiated).async {
-        DispatchQueue.global().asyncAfter(deadline: .now() + timeOut) {
-            //        sleep(UInt32(timeOut))
-            print("timeout !!!!!!")
-            task.terminate()
-            //    }
+        DispatchQueue.global(qos: .background).async {
+            
+            while task.isRunning == true {
+                
+                if info.systemUptime - begin <= timeOut { }
+                else {
+                    usleep(250000) // 1000000 1.000.000
+                    task.terminate()
+                    print("timeout !!!!!!")
+                
+                }
+                
+            }
+         
         }
     }
     
-    task.launch()
+    
     
     
     let data = pipe.fileHandleForReading.readDataToEndOfFile()
@@ -153,22 +165,30 @@ func shellErrorOnlyOutput(_ command: String, launchPath: String, arg: String, ti
     task.arguments = [arg, command]
     task.launchPath = launchPath
     
+    let info = ProcessInfo()
+    let begin = info.systemUptime
+    print("launch task")
+    task.launch()
     /* auto kill process if it takes to long */
     
     if timeOut == .infinity {} else {
-        //    DispatchQueue.global(qos: .userInitiated).async {
-        DispatchQueue.global().asyncAfter(deadline: .now() + timeOut) {
-            //        sleep(UInt32(timeOut))
-            print("timeout !!!!!!")
-            task.terminate()
-            //    }
+        DispatchQueue.global(qos: .background).async {
+            
+            while task.isRunning == true {
+                
+                if info.systemUptime - begin <= timeOut { }
+                else {
+                    usleep(250000) // 1000000 1.000.000
+                    task.terminate()
+                    print("timeout !!!!!!")
+                
+                }
+                
+            }
+         
         }
     }
-    
-    print("launch task")
-    task.launch()
-    
-    
+     
     let errorData = error.fileHandleForReading.readDataToEndOfFile()
     let outputError = String(data: errorData, encoding: .utf8)!
     
@@ -190,12 +210,27 @@ func shellLifeTimeout(_ command: String, launchPath: String, arg: String, timeOu
     task.standardError = pipe
     task.arguments = [arg, command]
     task.launchPath = launchPath
-    
+    let info = ProcessInfo()
+    let begin = info.systemUptime
+    print("launch task")
+    task.launch()
     /* auto kill process if it takes to long */
+    
     if timeOut == .infinity {} else {
-        DispatchQueue.global().asyncAfter(deadline: .now() + timeOut) {
-            print("timeout !!!!!!")
-            task.terminate()
+        DispatchQueue.global(qos: .background).async {
+            
+            while task.isRunning == true {
+                
+                if info.systemUptime - begin <= timeOut { }
+                else {
+                    usleep(250000) // 1000000 1.000.000
+                    task.terminate()
+                    print("timeout !!!!!!")
+                
+                }
+                
+            }
+         
         }
     }
     
@@ -221,8 +256,7 @@ func shellLifeTimeout(_ command: String, launchPath: String, arg: String, timeOu
         outputHandler.waitForDataInBackgroundAndNotify()
     }
     
-    print("launch task")
-    task.launch()
+    
     task.waitUntilExit()
     
     

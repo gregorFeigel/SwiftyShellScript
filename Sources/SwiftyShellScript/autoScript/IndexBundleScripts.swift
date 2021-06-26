@@ -204,19 +204,40 @@ public class ShellScripts {
         
         /* auto kill process if it takes to long */
         
-        if timeOut == .infinity {} else {
-             DispatchQueue.global().asyncAfter(deadline: .now() + timeOut) {
-                 print("timeout !!!!!!")
-                timeout = true
-                task.terminate()
-            
-            }
-        }
-        
         let info = ProcessInfo.processInfo
         let begin = info.systemUptime
         
         task.launch()
+        
+        if timeOut == .infinity {} else {
+            
+//             DispatchQueue.global().asyncAfter(deadline: .now() + timeOut) {
+//                 print("timeout !!!!!!")
+//                timeout = true
+//                task.terminate()
+//
+//            }
+            
+            
+            
+            DispatchQueue.global(qos: .background).async {
+                
+                while task.isRunning == true {
+                    
+                    if info.systemUptime - begin <= timeOut { }
+                    else {
+                        usleep(250000) // 1000000 1.000.000
+                        task.terminate()
+                        print("timeout !!!!!!")
+                        timeout = true
+                        
+                    }
+                    
+                }
+             
+            }
+            
+        }
         
         task.terminationHandler = { (process) in
              pTime = "\(info.systemUptime - begin)"
