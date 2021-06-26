@@ -339,7 +339,7 @@ public class shellScriptRenderer {
                     
                     if info.systemUptime - begin <= timeOut { }
                     else {
-                        usleep(250000) // 1000000 1.000.000
+                        usleep(250000) // time in milliseconds
                         task.terminate()
                         print("timeout !!!!!!")
                         timeout = true
