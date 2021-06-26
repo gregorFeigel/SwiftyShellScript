@@ -4,8 +4,10 @@
 ![Plattform: v](https://badgen.net/badge/plattform/macOS|Linux/gray)
 ![Swift: v](https://badgen.net/badge/swift/5/orange)
 
-Dynamic scripting made easy with Swift
+Dynamic scripting made easy with Swift.<br/>
+Modify shell scripts dynamically with swift and use shell functions in your swift code.
 
+#### Render and run dynamic shell scripts with swift 
 ```swift
 import SwiftyShellScript
 
@@ -18,23 +20,18 @@ let renderSet = [a, b, c]
 
 let script = shellScriptRenderer("/Users/admin/Documents/test.sh")
 script.render(renderSet)
+
+// export the rendered script 
 script.exportTo("/Users/admin/Documents/renderedTest.sh")
 script.chmod(to: 755, .int)
 
+// run the rendered script automatically in tmp dir
+script.timeout = 300 // if the script is not done in 5 min it will be killed 
+let output = script.runScript() 
+print(output.standardOutput)
 
-    /* working with files */
-
-let info = scriptInfo(path: "/Users/admin/Documents/test.sh")
-info.getFileType()
-info.getGroupOwnerAccountName()
-info.getPosixPermissions(as: .int)
-info.checkIfFileExits()
-info.getFileSize(.byte)
-info.getModificationDate()
-info.getCreationDate() 
-info.chmod(to: 755, .int)
-info.rename(to: "testFile.sh")
 ```
+shell script: 
 ```
 #!/bin/sh
 echo "this is a dynamic shell script"
@@ -42,6 +39,33 @@ echo "this is a dynamic shell script"
 #getDate() // function getDate
 §§hi // custom tag §§hi
 exit
+```
+### embed shell script functions in your swift code
+
+```swift
+ShellScripts("pathToScriptFolder").function("greet", param: "thomas") 
+
+// add a timeout
+ShellScripts("pathToScriptFolder").function("greet", param: "thomas", timeout: 20) 
+```
+
+### get file informations and modify them:
+```swift
+    /* working with files */
+
+let info = fileInfo("/Users/admin/Documents/test.sh")
+info.fileSize(.byte))
+info.groupOwnerAccountName()
+info.posixPermissions(as: .int)
+info.ownerAccountName()
+...
+info.isWritable()
+info.isSymbolicLink()
+
+// modify
+let file = modify("/Users/admin/Documents/test.sh")
+file.rename(to: renamed.txt)
+file.chmod(755, .int)
 ```
 
 
@@ -261,3 +285,4 @@ info.chmod(to: 0o755, .octalNumber)
 //input as octal number
 info.chmod(to: 493, .octalNumber)
 ```
+
