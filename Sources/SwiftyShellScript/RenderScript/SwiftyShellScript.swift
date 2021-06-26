@@ -287,8 +287,8 @@ public class shellScriptRenderer {
         } else { return (shellOutput.0, shellOutput.1, shellOutput.2, shellOutput.3, shellOutput.4, "error") }
         
         // remove tmp file in tmp dir
-        
-        
+//        print(tmp)
+        _ = deleteAt(path: tmp.path)
         
         // return output
         

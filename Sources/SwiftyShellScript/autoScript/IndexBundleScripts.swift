@@ -43,12 +43,15 @@ public class ShellScripts {
     
     var path: URL?
     //    var location: location?
+    public var launchPath : String = "/bin/bash"
+    public var arg : String = "-c"
+    public var timeout : TimeInterval = 300 // intervall time in sec
     
     //MARK: - run function
     
     var initScripts : [shellScript] = []  //[]
     
-    public func function(_ t: String, param: String, timeout: TimeInterval? = 300) -> (output: String, error: String) {
+    public func function(_ t: String, param: String, timeout: TimeInterval? = 300) -> (output: String, error: String, timeoutInterrupt: Bool, processTime: String, exitState: Int32) {
         
         // get the script that the function contains
         var scriptPath = ""
@@ -58,12 +61,16 @@ public class ShellScripts {
         
         print(scriptPath)
         
-        let shell = runScript(scriptPath: scriptPath + " " + t + "" + param )
-        shell.timeout = timeout!
-        let execute = shell.shellPipe()
+        modify(scriptPath).chmod(to: 755, .int)
+        
+//        let shell = runScript(scriptPath: scriptPath + " " + t + "" + param )
+//        shell.timeout = timeout!
+//        let execute = shell.shellPipe()
+        
+        let shell = mainShell(scriptPath + " " + t + "" + param, launchPath: launchPath, arg: arg, timeOut: timeout!)
         
         
-        return (execute.output, execute.error)
+        return (shell.output, shell.error, shell.timoutInterupt, shell.duration, shell.exitState)
     }
     
     
@@ -175,6 +182,55 @@ public class ShellScripts {
             return false
         }
         
+    }
+    
+    /* shell with timeout */
+
+    private func mainShell(_ command: String, launchPath: String, arg: String, timeOut: TimeInterval) -> (output: String, error: String, duration: String, timoutInterupt: Bool, exitState: Int32) {
+        
+        let task = Process()
+        let pipe = Pipe()
+        let error = Pipe()
+        
+        var timeout = false
+        var pTime = ""
+        
+        /* setup */
+        
+        task.standardOutput = pipe
+        task.standardError = error
+        task.arguments = [arg, command]
+        task.launchPath = launchPath
+        
+        /* auto kill process if it takes to long */
+        
+        if timeOut == .infinity {} else {
+             DispatchQueue.global().asyncAfter(deadline: .now() + timeOut) {
+                 print("timeout !!!!!!")
+                timeout = true
+                task.terminate()
+            
+            }
+        }
+        
+        let info = ProcessInfo.processInfo
+        let begin = info.systemUptime
+        
+        task.launch()
+        
+        task.terminationHandler = { (process) in
+             pTime = "\(info.systemUptime - begin)"
+         }
+        
+        
+        
+        let data = pipe.fileHandleForReading.readDataToEndOfFile()
+        let errorData = error.fileHandleForReading.readDataToEndOfFile()
+        let output = String(data: data, encoding: .utf8)!
+        let outputError = String(data: errorData, encoding: .utf8)!
+        
+        
+        return (output, outputError, pTime, timeout, task.terminationStatus)
     }
     
 }

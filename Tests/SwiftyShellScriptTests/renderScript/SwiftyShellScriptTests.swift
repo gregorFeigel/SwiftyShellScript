@@ -50,7 +50,7 @@
             let a = Item(identifier: "test", input: "#everything worked!", taskType: .variable)
             
             let script = shellScriptRenderer(testExec)
-            script.timeout = 17
+            script.timeout = 18
             script.render([a])
             let t = script.runScript()
             

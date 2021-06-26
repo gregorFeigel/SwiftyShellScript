@@ -37,3 +37,18 @@ func writeTo(_ t: String, to: URL) -> Bool {
     }
     return true
 }
+
+
+func deleteAt(path: String) -> Bool {
+    // Check if file exists
+    if FileManager.default.fileExists(atPath: path) {
+        // Delete file
+        do {
+            try FileManager.default.removeItem(atPath: path)
+        } catch { return false }
+    } else {
+        print("File does not exist")
+        return false
+    }
+    return true
+}
