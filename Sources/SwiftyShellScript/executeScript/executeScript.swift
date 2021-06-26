@@ -37,11 +37,11 @@ public class runScript {
     public var arg : String = "-c"
     public var timeout : TimeInterval = 300 // intervall time in sec 
     
-    public func shellPipe()  -> (output: String, error: String) {
+    public func runDefault()  -> shellOutput {
         
         let sh = shellTimeout(scriptPath, launchPath: launchPath, arg: arg, timeOut: timeout)
         
-        return (sh.output, sh.error)
+        return shellOutput(standardOutput: sh.standardOutput, standardError: sh.standardError, processTime: sh.processTime, timeoutInterrupt: sh.timeoutInterrupt, terminationStatus: sh.terminationStatus, error: sh.error)
     }
     
     public func shellPrintRealTime() {
@@ -69,54 +69,43 @@ public class runScript {
 }
 
 
+ 
 
-/// # returns the shell output split into error and output, no timeout function and no real time output
-/// - Parameters:
-///   - command:  command to execute
-///   - launchPath: launch path
-///   - arg:  e.g. -c
-/// - Returns: output split into error and output
-func shell(_ command: String, launchPath: String, arg: String) -> (output: String, error: String) {
+//MARK: - shell with timeout
+
+func shellTimeout(_ command: String, launchPath: String, arg: String, timeOut: TimeInterval) -> shellOutput {
     
     let task = Process()
     let pipe = Pipe()
     let error = Pipe()
     
-    task.standardOutput = pipe
-    task.standardError = error
-    task.arguments = [arg, command]
-    task.launchPath = launchPath
-    task.launch()
-    
-    let data = pipe.fileHandleForReading.readDataToEndOfFile()
-    let errorData = error.fileHandleForReading.readDataToEndOfFile()
-    let output = String(data: data, encoding: .utf8)!
-    let outputError = String(data: errorData, encoding: .utf8)!
-    
-    
-    return (output, outputError)
-}
+    var timeoutInterrupt = Bool()
+    var pTime = Double()
 
-
-/* shell with timeout */
-
-func shellTimeout(_ command: String, launchPath: String, arg: String, timeOut: TimeInterval) -> (output: String, error: String) {
-    
-    let task = Process()
-    let pipe = Pipe()
-    let error = Pipe()
-    
     /* setup */
     
     task.standardOutput = pipe
     task.standardError = error
     task.arguments = [arg, command]
-    task.launchPath = launchPath
+    if #available(macOS 10.13, *) {
+        task.executableURL = URL(fileURLWithPath: launchPath)
+    } else {
+        task.launchPath = launchPath
+    }
     
     let info = ProcessInfo()
     let begin = info.systemUptime
     
+    if #available(macOS 10.13, *) {
+    do { try task.run()   }
+    catch { return shellOutput(standardOutput: "", standardError: "", processTime: info.systemUptime - begin, timeoutInterrupt: false, terminationStatus: task.terminationStatus, error: "\(task.terminationReason)") }
+    } else {
     task.launch()
+    }
+    
+    
+    
+    
     /* auto kill process if it takes to long */
     
     if timeOut == .infinity {} else {
@@ -129,6 +118,7 @@ func shellTimeout(_ command: String, launchPath: String, arg: String, timeOut: T
                     usleep(250000) // 1000000 1.000.000
                     task.terminate()
                     print("timeout !!!!!!")
+                    timeoutInterrupt = true
                 
                 }
                 
@@ -137,7 +127,9 @@ func shellTimeout(_ command: String, launchPath: String, arg: String, timeOut: T
         }
     }
     
-    
+    task.terminationHandler = { (process) in
+         pTime = info.systemUptime - begin
+     }
     
     
     let data = pipe.fileHandleForReading.readDataToEndOfFile()
@@ -146,11 +138,11 @@ func shellTimeout(_ command: String, launchPath: String, arg: String, timeOut: T
     let outputError = String(data: errorData, encoding: .utf8)!
     
     
-    return (output, outputError)
+    return shellOutput(standardOutput: output, standardError: outputError, processTime: pTime, timeoutInterrupt: timeoutInterrupt, terminationStatus: task.terminationStatus, error: "")
 }
 
 
-/* shell with timeout and error only output */
+//MARK: - shell with timeout and error only output
 
 func shellErrorOnlyOutput(_ command: String, launchPath: String, arg: String, timeOut: TimeInterval) -> String {
     
@@ -163,12 +155,24 @@ func shellErrorOnlyOutput(_ command: String, launchPath: String, arg: String, ti
     task.standardOutput = pp 
     task.standardError = error
     task.arguments = [arg, command]
-    task.launchPath = launchPath
+    if #available(macOS 10.13, *) {
+        task.executableURL = URL(fileURLWithPath: launchPath)
+    } else {
+        task.launchPath = launchPath
+    }
     
     let info = ProcessInfo()
     let begin = info.systemUptime
     print("launch task")
-    task.launch()
+    
+    if #available(macOS 10.13, *) {
+        do { try task.run() }
+        catch { return "something went wrong" }
+    } else {
+        task.launch()
+    }
+    
+    
     /* auto kill process if it takes to long */
     
     if timeOut == .infinity {} else {
@@ -197,6 +201,9 @@ func shellErrorOnlyOutput(_ command: String, launchPath: String, arg: String, ti
 }
 
 
+
+//MARK: - shell with realtime output and timeout
+
 /* shell with timeout and real time output and no return with common output */
 //@discardableResult
 func shellLifeTimeout(_ command: String, launchPath: String, arg: String, timeOut: TimeInterval) {
@@ -209,11 +216,24 @@ func shellLifeTimeout(_ command: String, launchPath: String, arg: String, timeOu
     task.standardOutput = pipe
     task.standardError = pipe
     task.arguments = [arg, command]
-    task.launchPath = launchPath
+    if #available(macOS 10.13, *) {
+        task.executableURL = URL(fileURLWithPath: launchPath)
+    } else {
+        task.launchPath = launchPath
+    }
     let info = ProcessInfo()
     let begin = info.systemUptime
     print("launch task")
+    
+    if #available(macOS 10.13, *) {
+        do { try task.run() }
+        catch { print(task.terminationStatus) }
+    } else {
     task.launch()
+    }
+   
+    
+    
     /* auto kill process if it takes to long */
     
     if timeOut == .infinity {} else {
@@ -258,62 +278,21 @@ func shellLifeTimeout(_ command: String, launchPath: String, arg: String, timeOu
     
     
     task.waitUntilExit()
-    print("this task took: ", info.systemUptime - begin)
+    
+    print("\n" + "-------------------------\n" + "this task took: ", info.systemUptime - begin, "seconds")
     
     
 }
 
 
-
-
-
-
-
-
-//public class runner {
-//    
-//    public init(scriptPath: String) {
-//        self.scriptPath = scriptPath
-//    }
-//
-//    public var scriptPath : String
-//    
-//    let queue = Queuer(name: "MyCustomQueue")
-//    
-//    
-//    public func timeoutStop(_ t: TimeInterval = 15) {
-//        
-//        DispatchQueue.global(qos: .userInitiated).async {
-////            DispatchQueue.main.asyncAfter(deadline: .now() + t) {
-//            sleep(UInt32(t))
-//            print("timeout !!!!!!")
-//            self.queue.cancelAll()
-////        }
-//            
-//        }
-//
-//    }
-//    
-//    
-//    public func task() {
-//         
-//        queue.addOperation {
-//            while true {
-//                
-//                sleep(1)
-//                print("is running1")
-//               
-//            }
-//        }
-//        
-//    }
-//    
-//   
-//    public func stop() {
-//        queue.cancelAll()
-////        print("forceStop")
-//    }
-//    
-//    
-//    
-//}
+public struct shellOutput {
+    
+    public var standardOutput: String
+    public var standardError: String
+    public var processTime: Double
+    public var timeoutInterrupt: Bool
+    public var terminationStatus: Int32
+    public var error: String
+    
+    
+}

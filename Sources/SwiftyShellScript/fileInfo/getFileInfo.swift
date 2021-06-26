@@ -253,7 +253,7 @@ public extension fileInfo {
     
     //MARK: - isExecutableKey
     
-    func isExecutableKey() -> Bool? {
+    func isExecutable() -> Bool? {
         if self.validatePath() == false { return nil } else {
             return valueForSelectedKey(.isExecutableKey, path: self.stringToUrl()).isExecutable
         }
@@ -262,7 +262,7 @@ public extension fileInfo {
     
     //MARK: - isReadableKey
     
-    func isReadableKey() -> Bool? {
+    func isReadable() -> Bool? {
         if self.validatePath() == false { return nil } else {
             return valueForSelectedKey(.isReadableKey, path: self.stringToUrl()).isReadable
         }
@@ -270,7 +270,7 @@ public extension fileInfo {
     
     //MARK: - isWritableKey
     
-    func isWritableKey() -> Bool? {
+    func isWritable() -> Bool? {
         if self.validatePath() == false { return nil } else {
             return valueForSelectedKey(.isWritableKey, path: self.stringToUrl()).isWritable
         }
@@ -280,7 +280,7 @@ public extension fileInfo {
     
     //MARK: - isVolumeKey
     
-    func isVolumeKey() -> Bool? {
+    func isVolume() -> Bool? {
         if self.validatePath() == false { return nil } else {
             return valueForSelectedKey(.isVolumeKey, path: self.stringToUrl()).isVolume
         }
@@ -288,7 +288,7 @@ public extension fileInfo {
     
     //MARK: - isPackageKey
     
-    func isPackageKey() -> Bool? {
+    func isPackage() -> Bool? {
         if self.validatePath() == false { return nil } else {
             return valueForSelectedKey(.isPackageKey, path: self.stringToUrl()).isPackage
         }
@@ -296,7 +296,7 @@ public extension fileInfo {
     
     //MARK: - isAliasFileKey
     
-    func isAliasFileKey() -> Bool? {
+    func isAliasFile() -> Bool? {
         if self.validatePath() == false { return nil } else {
             return valueForSelectedKey(.isAliasFileKey, path: self.stringToUrl()).isAliasFile
         }
@@ -304,7 +304,7 @@ public extension fileInfo {
     
     //MARK: - isDirectoryKey
     
-    func isDirectoryKey() -> Bool? {
+    func isDirectory() -> Bool? {
         if self.validatePath() == false { return nil } else {
             return valueForSelectedKey(.isDirectoryKey, path: self.stringToUrl()).isDirectory
         }
@@ -314,7 +314,7 @@ public extension fileInfo {
     
     //MARK: - isRegularFileKey
     
-    func isRegularFileKey() -> Bool? {
+    func isRegularFile() -> Bool? {
         if self.validatePath() == false { return nil } else {
             return valueForSelectedKey(.isRegularFileKey, path: self.stringToUrl()).isRegularFile
         }
@@ -322,7 +322,7 @@ public extension fileInfo {
     
     //MARK: - isSymbolicLinkKey
     
-    func isSymbolicLinkKey() -> Bool? {
+    func isSymbolicLink() -> Bool? {
         if self.validatePath() == false { return nil } else {
             return valueForSelectedKey(.isSymbolicLinkKey, path: self.stringToUrl()).isSymbolicLink
         }
@@ -330,7 +330,7 @@ public extension fileInfo {
     
     //MARK: - addedToDirectoryDateKey
     
-    func addedToDirectoryDateKey() -> Date? {
+    func addedToDirectoryDate() -> Date? {
         if self.validatePath() == false { return nil } else {
             return valueForSelectedKey(.addedToDirectoryDateKey, path: self.stringToUrl()).addedToDirectoryDate
         }

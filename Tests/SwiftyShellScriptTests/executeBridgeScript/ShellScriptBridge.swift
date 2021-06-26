@@ -20,21 +20,50 @@ final class shellBridge: XCTestCase {
     let mainDir = URL(fileURLWithPath: dir(withPath: ""))
     
     
-    func testAdvancedFiles() {
+    func testRunFunction() {
         
         // let Script = ShellScripts().function("greet", param: "") // usage with bundle
         
         let Script = ShellScripts(mainDir).function("test", param: "")
+        
         print(Script.processTime)
-        print(Script.error)
-        print(Script.exitState)
-        print(Script.output)
+ 
+        XCTAssertEqual(Script.standardOutput, "Hi\n")
+        XCTAssertEqual(Script.standardError, "")
+        XCTAssertEqual(Script.terminationStatus, 0)
+        XCTAssertEqual(Script.timeoutInterrupt, false)
+  
+    }
+    
+    
+    func testRunFunctionWithTimeout() {
         
-//        let Script = ShellScripts(mainDir).test()
-         
+        let Script = ShellScripts(mainDir).function("test", param: "", timeout: 3)
         
+        print(Script.processTime)
+ 
+        XCTAssertEqual(Script.standardOutput, "")
+        XCTAssertEqual(Script.standardError, "")
+        XCTAssertEqual(Script.terminationStatus, 15)
+        XCTAssertEqual(Script.timeoutInterrupt, true)
+        XCTAssertEqual(Script.processTime.rounded(), 3)
         
     }
+    
+    
+    func testRunFunctionWithError() {
+        
+        let Script = ShellScripts(mainDir).function("notWorking", param: "", timeout: 30)
+        
+        print(Script.processTime)
+ 
+        XCTAssertEqual(Script.standardOutput, "Hi\n")
+        XCTAssertEqual(Script.standardError, "ls: /home/notExisting: No such file or directory\n")
+        XCTAssertEqual(Script.terminationStatus, 0)
+        XCTAssertEqual(Script.timeoutInterrupt, false)
+        
+    }
+    
     
     
 }

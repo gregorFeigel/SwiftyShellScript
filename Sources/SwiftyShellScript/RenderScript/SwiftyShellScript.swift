@@ -272,66 +272,82 @@ public class shellScriptRenderer {
     //MARK: - execute shell script
     
     @available(macOS 10.15, *)
-    func runScript() -> (scriptOutput: String, scriptError: String, processTime: String, timeover: Bool, taskTerminationStatus: Int32 ,error: String) {
+    func runScript() -> shellOutput {
         
         let tmpFileName = "\(Date())--\(shellScriptPath)".asSHA256()
-        var shellOutput = ("", "", "", false, Int32(110))
+        var mainShellOutput = ("", "", 0.0, false, Int32(110))
         let tmp = FileManager.default.temporaryDirectory.appendingPathComponent(tmpFileName)
         // copy script to temp folder
         if writeTo(renderedShellScript, to: tmp) == true {
             if modify(tmp.path).chmod(to: 755, .int) == true {
                 // run script
-    
-                shellOutput = mainShell(tmp.path, launchPath: launchPath, arg: arg, timeOut: timeout)
                 
-            } else { return (shellOutput.0, shellOutput.1, shellOutput.2, shellOutput.3, shellOutput.4, "error") }
+                mainShellOutput = mainShell(tmp.path, launchPath: launchPath, arg: arg, timeOut: timeout)
                 
-        } else { return (shellOutput.0, shellOutput.1, shellOutput.2, shellOutput.3, shellOutput.4, "error") }
+            } else { return  shellOutput(standardOutput: "", standardError: "", processTime: 0.0, timeoutInterrupt: false, terminationStatus: Int32(1), error: "error") }
+            
+        } else { return shellOutput(standardOutput: "", standardError: "", processTime: 0.0, timeoutInterrupt: false, terminationStatus: Int32(1), error: "error")}
         
         // remove tmp file in tmp dir
-//        print(tmp)
+        //        print(tmp)
         _ = deleteAt(path: tmp.path)
         
         // return output
         
-        return (shellOutput.0, shellOutput.1, shellOutput.2, shellOutput.3, shellOutput.4, "no error")
+        return shellOutput(standardOutput: mainShellOutput.0, standardError: mainShellOutput.1, processTime: mainShellOutput.2, timeoutInterrupt: mainShellOutput.3, terminationStatus: mainShellOutput.4, error: "")
     }
     
     
     
     /* shell with timeout */
-
-    private func mainShell(_ command: String, launchPath: String, arg: String, timeOut: TimeInterval) -> (output: String, error: String, duration: String, timoutInterupt: Bool, exitState: Int32) {
+    
+    private func mainShell(_ command: String, launchPath: String, arg: String, timeOut: TimeInterval) -> (output: String, error: String, duration: Double, timeoutInterrupt: Bool, exitState: Int32) {
         
         let task = Process()
         let pipe = Pipe()
         let error = Pipe()
         
         var timeout = false
-        var pTime = ""
+        var pTime = Double()
         
         /* setup */
         
         task.standardOutput = pipe
         task.standardError = error
         task.arguments = [arg, command]
-        task.launchPath = launchPath
+        
+        if #available(macOS 10.13, *) {
+            task.executableURL = URL(fileURLWithPath: launchPath)
+        } else {
+            task.launchPath = launchPath
+        }
+        
         
         /* auto kill process if it takes to long */
         
         let info = ProcessInfo.processInfo
         let begin = info.systemUptime
         
-        task.launch()
+        
+        
+        if #available(macOS 10.13, *) {
+            
+            do { try task.run() }
+            catch { return ("", "", pTime, timeout, task.terminationStatus)  }
+            
+        } else {
+            task.launch()
+        }
+        
         
         if timeOut == .infinity {} else {
             
-//             DispatchQueue.global().asyncAfter(deadline: .now() + timeOut) {
-//                 print("timeout !!!!!!")
-//                timeout = true
-//                task.terminate()
-//
-//            }
+            //             DispatchQueue.global().asyncAfter(deadline: .now() + timeOut) {
+            //                 print("timeout !!!!!!")
+            //                timeout = true
+            //                task.terminate()
+            //
+            //            }
             
             
             
@@ -349,18 +365,18 @@ public class shellScriptRenderer {
                     }
                     
                 }
-             
+                
             }
             
         }
         
-      
+        
         
         
         
         task.terminationHandler = { (process) in
-             pTime = "\(info.systemUptime - begin)"
-         }
+            pTime = info.systemUptime - begin
+        }
         
         
         

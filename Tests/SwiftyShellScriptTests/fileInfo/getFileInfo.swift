@@ -23,6 +23,7 @@ Please read the testMater.swift file
 final class testFileInfo: XCTestCase {
     
     let txt = dir(withPath: "/multiFileTypes/testFile.txt")
+    let renamed = dir(withPath: "/multiFileTypes/renamed.txt")
     let large = dir(withPath: "/multiFileTypes/largeFile.txt")
     let data = dir(withPath: "/multiFileTypes/testFile.data")
     let pdf = dir(withPath: "/multiFileTypes/testFile.pdf")
@@ -35,18 +36,39 @@ final class testFileInfo: XCTestCase {
     func testGetInfo() {
         
         let tt = fileInfo(txt)
-        print(tt.fileSize(.byte)!)
-        print(tt.groupOwnerAccountName()!)
-        print(tt.ownerAccountName()!)
-        print(tt.posixPermissions(as: .octalNumber)!)
+        XCTAssertNotNil(tt.fileSize(.byte))
+        XCTAssertNotNil(tt.groupOwnerAccountName())
+        XCTAssertNotNil(tt.ownerAccountName())
+        XCTAssertNotNil(tt.posixPermissions(as: .octalNumber))
+        XCTAssertNotNil(tt.posixPermissions(as: .int))
         
-        // resource values
+        /* resource values*/
         
-        print(tt.isExecutableKey()!)
-        print(tt.isReadableKey()!)
-        print(tt.isWritableKey()!)
-        print(tt.isSymbolicLinkKey()!)
+        XCTAssertNotNil(tt.isExecutable() )
+        XCTAssertNotNil(tt.isReadable())
+        XCTAssertNotNil(tt.isWritable())
+        XCTAssertNotNil(tt.isSymbolicLink())
         
+        
+    }
+    
+    func testModify() {
+        
+        let tt = modify(txt)
+        XCTAssertTrue(tt.chmod(to: 755, .int))
+        XCTAssertTrue(tt.rename(to: "renamed.txt"))
+        
+        let file = modify(renamed)
+        XCTAssertTrue(file.chmod(to: 0o644, .octalNumber))
+        XCTAssertTrue(file.rename(to: "testFile.txt"))
+        
+        
+    }
+    
+    func testInvalidPath() {
+        
+        let tt = fileInfo("/notExisting")
+        XCTAssertNil(tt.fileSize(.byte))
         
     }
     

@@ -51,7 +51,7 @@ public class ShellScripts {
     
     var initScripts : [shellScript] = []  //[]
     
-    public func function(_ t: String, param: String, timeout: TimeInterval? = 300) -> (output: String, error: String, timeoutInterrupt: Bool, processTime: String, exitState: Int32) {
+    public func function(_ t: String, param: String, timeout: TimeInterval? = 300) -> shellOutput {
         
         // get the script that the function contains
         var scriptPath = ""
@@ -62,15 +62,11 @@ public class ShellScripts {
         print(scriptPath)
         
         modify(scriptPath).chmod(to: 755, .int)
-        
-//        let shell = runScript(scriptPath: scriptPath + " " + t + "" + param )
-//        shell.timeout = timeout!
-//        let execute = shell.shellPipe()
-        
+         
         let shell = mainShell(scriptPath + " " + t + "" + param, launchPath: launchPath, arg: arg, timeOut: timeout!)
         
         
-        return (shell.output, shell.error, shell.timoutInterupt, shell.duration, shell.exitState)
+        return shellOutput(standardOutput: shell.output, standardError: shell.error, processTime: shell.duration, timeoutInterrupt: shell.timeoutInterrupt, terminationStatus: shell.exitState, error: "")
     }
     
     
@@ -186,21 +182,25 @@ public class ShellScripts {
     
     /* shell with timeout */
 
-    private func mainShell(_ command: String, launchPath: String, arg: String, timeOut: TimeInterval) -> (output: String, error: String, duration: String, timoutInterupt: Bool, exitState: Int32) {
+    private func mainShell(_ command: String, launchPath: String, arg: String, timeOut: TimeInterval) -> (output: String, error: String, duration: Double, timeoutInterrupt: Bool, exitState: Int32) {
         
         let task = Process()
         let pipe = Pipe()
         let error = Pipe()
         
         var timeout = false
-        var pTime = ""
+        var pTime = Double()
         
         /* setup */
         
         task.standardOutput = pipe
         task.standardError = error
         task.arguments = [arg, command]
-        task.launchPath = launchPath
+        if #available(macOS 10.13, *) {
+            task.executableURL = URL(fileURLWithPath: launchPath)
+        } else {
+            task.launchPath = launchPath
+        }
         
         /* auto kill process if it takes to long */
         
@@ -238,9 +238,9 @@ public class ShellScripts {
             }
             
         }
-        
+    
         task.terminationHandler = { (process) in
-             pTime = "\(info.systemUptime - begin)"
+             pTime = info.systemUptime - begin
          }
         
         

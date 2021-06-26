@@ -51,16 +51,16 @@
             let a = Item(identifier: "test", input: "#everything worked!", taskType: .variable)
             
             let script = shellScriptRenderer(testExec)
-            script.timeout = 60
+            script.timeout = 3
             script.render([a])
             let t = script.runScript()
             
             print(t.processTime)
-            print(t.timeover)
+            print(t.timeoutInterrupt)
             print(t.error)
-            print(t.taskTerminationStatus)
-            print(t.scriptError)
-            print(t.scriptOutput)
+            print(t.terminationStatus)
+            print(t.standardError)
+            print(t.standardOutput)
             
         }
         
