@@ -30,6 +30,10 @@ public class shellScriptRenderer {
     var renderedShellScript = String()
     var renderedShellScriptPath = String()
     
+    public var launchPath : String = "/bin/bash"
+    public var arg : String = "-c"
+    public var timeout : TimeInterval = 300 // intervall time in sec
+    
     
     //MARK: - check if file already exists
     
@@ -263,7 +267,84 @@ public class shellScriptRenderer {
     }
     
     
+    //MARK: - execute shell script
     
+    @available(macOS 10.15, *)
+    func runScript() -> (scriptOutput: String, scriptError: String, processTime: String, timeover: Bool, taskTerminationStatus: Int32 ,error: String) {
+        
+        let tmpFileName = "\(Date())--\(shellScriptPath)".asSHA256()
+        var shellOutput = ("", "", "", false, Int32(110))
+        let tmp = FileManager.default.temporaryDirectory.appendingPathComponent(tmpFileName)
+        // copy script to temp folder
+        if writeTo(renderedShellScript, to: tmp) == true {
+            if modify(tmp.path).chmod(to: 755, .int) == true {
+                // run script
+    
+                shellOutput = mainShell(tmp.path, launchPath: launchPath, arg: arg, timeOut: timeout)
+                
+            } else { return (shellOutput.0, shellOutput.1, shellOutput.2, shellOutput.3, shellOutput.4, "error") }
+                
+        } else { return (shellOutput.0, shellOutput.1, shellOutput.2, shellOutput.3, shellOutput.4, "error") }
+        
+        // remove tmp file in tmp dir
+        
+        
+        
+        // return output
+        
+        return (shellOutput.0, shellOutput.1, shellOutput.2, shellOutput.3, shellOutput.4, "no error")
+    }
+    
+    
+    
+    /* shell with timeout */
+
+    private func mainShell(_ command: String, launchPath: String, arg: String, timeOut: TimeInterval) -> (output: String, error: String, duration: String, timoutInterupt: Bool, exitState: Int32) {
+        
+        let task = Process()
+        let pipe = Pipe()
+        let error = Pipe()
+        
+        var timeout = false
+        var pTime = ""
+        
+        /* setup */
+        
+        task.standardOutput = pipe
+        task.standardError = error
+        task.arguments = [arg, command]
+        task.launchPath = launchPath
+        
+        /* auto kill process if it takes to long */
+        
+        if timeOut == .infinity {} else {
+             DispatchQueue.global().asyncAfter(deadline: .now() + timeOut) {
+                 print("timeout !!!!!!")
+                timeout = true
+                task.terminate()
+            
+            }
+        }
+        
+        let info = ProcessInfo.processInfo
+        let begin = info.systemUptime
+        
+        task.launch()
+        
+        task.terminationHandler = { (process) in
+             pTime = "\(info.systemUptime - begin)"
+         }
+        
+        
+        
+        let data = pipe.fileHandleForReading.readDataToEndOfFile()
+        let errorData = error.fileHandleForReading.readDataToEndOfFile()
+        let output = String(data: data, encoding: .utf8)!
+        let outputError = String(data: errorData, encoding: .utf8)!
+        
+        
+        return (output, outputError, pTime, timeout, task.terminationStatus)
+    }
     
     
 }

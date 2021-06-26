@@ -6,8 +6,19 @@
 //
 
 import Foundation
+import CryptoKit
 
 extension String {
+    
+    @available(macOS 10.15, *)
+    func asSHA256() -> String {
+        
+        let inputData = Data(self.utf8)
+        let hashed = SHA256.hash(data: inputData)
+        return hashed.compactMap { String(format: "%02x", $0) }.joined()
+        
+    }
+    
     
     func getContentBetween(from: String, to: String) -> String? {
         return (range(of: from)?.upperBound).flatMap { substringFrom in

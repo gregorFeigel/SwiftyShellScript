@@ -33,33 +33,33 @@ public class runScript {
     }
     
     public var scriptPath : String
-    public var lunchPath : String = "/bin/bash"
+    public var launchPath : String = "/bin/bash"
     public var arg : String = "-c"
     public var timeout : TimeInterval = 300 // intervall time in sec 
     
     public func shellPipe()  -> (output: String, error: String) {
         
-        let sh = shellTimeout(scriptPath, launchPath: lunchPath, arg: arg, timeOut: timeout)
+        let sh = shellTimeout(scriptPath, launchPath: launchPath, arg: arg, timeOut: timeout)
         
         return (sh.output, sh.error)
     }
     
     public func shellPrintRealTime() {
         
-        shellLifeTimeout(scriptPath, launchPath: lunchPath, arg: arg, timeOut: timeout)
+        shellLifeTimeout(scriptPath, launchPath: launchPath, arg: arg, timeOut: timeout)
         
     }
     
     public func shellErrorsOnly()  -> String {
         
-        let sh = shellErrorOnlyOutput(scriptPath, launchPath: lunchPath, arg: arg, timeOut: timeout)
+        let sh = shellErrorOnlyOutput(scriptPath, launchPath: launchPath, arg: arg, timeOut: timeout)
         
         return sh
     }
     
     public func shellBool()  -> Bool {
         
-        let sh = shellErrorOnlyOutput(scriptPath, launchPath: lunchPath, arg: arg, timeOut: timeout)
+        let sh = shellErrorOnlyOutput(scriptPath, launchPath: launchPath, arg: arg, timeOut: timeout)
         
         if sh.isEmpty {return true }
         else { return false }

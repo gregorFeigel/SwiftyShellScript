@@ -10,7 +10,7 @@
     
     final class SwiftyShellScriptTests: XCTestCase {
         
-        
+        let testExec = dir(withPath: "/TestEX.sh")
         
         let oriPath = dir(withPath: "/Test.sh")
         let exportPath = dir(withPath: "/rTest.sh")
@@ -41,6 +41,24 @@
             
              XCTAssertEqual(fileInfo(exportPath).posixPermissions(as: .int), 555)
 
+            
+        }
+        
+        
+        func testAndExecute() {
+            
+            let a = Item(identifier: "test", input: "#everything worked!", taskType: .variable)
+            
+            let script = shellScriptRenderer(testExec)
+            script.timeout = 17
+            script.render([a])
+            let t = script.runScript()
+            
+            print(t.processTime)
+            print(t.error)
+            print(t.taskTerminationStatus)
+            print(t.scriptError)
+            print(t.scriptOutput)
             
         }
         

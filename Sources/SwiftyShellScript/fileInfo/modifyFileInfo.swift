@@ -22,7 +22,7 @@ import Foundation
 
 class modify {
     
-    internal init(path: String) {
+    internal init(_ path: String) {
         self.path = path
     }
     
