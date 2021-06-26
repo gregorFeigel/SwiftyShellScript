@@ -258,6 +258,7 @@ func shellLifeTimeout(_ command: String, launchPath: String, arg: String, timeOu
     
     
     task.waitUntilExit()
+    print("this task took: ", info.systemUptime - begin)
     
     
 }

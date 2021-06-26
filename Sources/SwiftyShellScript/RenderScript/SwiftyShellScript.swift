@@ -7,6 +7,7 @@
 
 import Foundation
 
+
 /*
  
  shell script renderer
@@ -14,6 +15,7 @@ import Foundation
  - get shell script content
  - replace variables- and custom tags with the input value
  - replace functions tags with the output of the user defined function - containing the function input - result
+ 
  
  */
 
