@@ -23,8 +23,8 @@ final class executeHandlerTests: XCTestCase {
     
     func testShell() {
         
-        let info = scriptInfo(path: "/Users/Gregor/Documents/XCTestSwiftyShellScript/testShell/Test.sh")
-        _ = info.chmod(to: 755, .int)
+        let info = fileInfo("/Users/Gregor/Documents/XCTestSwiftyShellScript/testShell/Test.sh")
+//        _ = info.chmod(to: 755, .int)
         
         let tt = runScript(scriptPath: "/Users/Gregor/Documents/XCTestSwiftyShellScript/testShell/Test.sh") // "/Users/Gregor/Documents/XCTestSwiftyShellScript/testShell/Test.sh"
          tt.timeout = 5 //.infinity
@@ -47,8 +47,8 @@ final class executeHandlerTests: XCTestCase {
     
     func testShellBool() {
         
-        let info = scriptInfo(path: "/Users/Gregor/Documents/XCTestSwiftyShellScript/testShell/Test.sh")
-        _ = info.chmod(to: 755, .int)
+        let info = fileInfo("/Users/Gregor/Documents/XCTestSwiftyShellScript/testShell/Test.sh")
+//        _ = info.chmod(to: 755, .int)
         
         let tt = runScript(scriptPath: "/Users/Gregor/Documents/XCTestSwiftyShellScript/testShell/Test.sh")
         tt.timeout = 20

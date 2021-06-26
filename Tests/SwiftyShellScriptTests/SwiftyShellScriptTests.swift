@@ -39,8 +39,7 @@
             
             // check if posix permissions where changed correctly
             
-            let info = scriptInfo(path: exportPath)
-            XCTAssertEqual(info.getPosixPermissions(as: .int), 555)
+             XCTAssertEqual(fileInfo(exportPath).posixPermissions(as: .int), 555)
 
             
         }

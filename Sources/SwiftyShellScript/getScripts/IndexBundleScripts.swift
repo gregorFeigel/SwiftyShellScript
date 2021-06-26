@@ -94,8 +94,7 @@ public class ShellScripts {
                 let enumerator = FileManager.default.enumerator(at: shellScriptFolder!,
                                                                 includingPropertiesForKeys: resourceKeys,
                                                                 options: [.skipsHiddenFiles], errorHandler: { (url, error) -> Bool in
-                                                                    print("directoryEnumerator error at \(url): ", error)
-                                                                    return true
+                                                                     return true
                                                                 })!
                 
                 for case let fileURL as URL in enumerator {
