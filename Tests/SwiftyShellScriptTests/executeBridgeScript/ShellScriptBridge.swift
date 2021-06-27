@@ -24,7 +24,7 @@ final class shellBridge: XCTestCase {
         
         // let Script = ShellScripts().function("greet", param: "") // usage with bundle
         
-        let Script = ShellScripts(mainDir).function("test", param: "")
+        let Script = ShellScripts(mainDir).function("say", param: "thomas")
         
         print(Script.processTime)
  
