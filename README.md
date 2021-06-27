@@ -72,6 +72,11 @@ print(output.standardOutput)
 
 shell script: 
 ```
+# /* SwiftyShellScript Bridge
+#
+# - function: greet
+#
+# */End
 #!/bin/sh
 greet() {
 echo "Hi $1"
