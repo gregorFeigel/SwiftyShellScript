@@ -34,7 +34,7 @@ import Foundation
 public class ShellScripts {
     
     
-    public init(_ path: URL? = Bundle.main.resourceURL?.appendingPathComponent("/shellScript")) { //, location: location? = .bundle
+    public init(_ path: URL? = Bundle.main.resourceURL?.appendingPathComponent("/shellScripts")) { //, location: location? = .bundle
         self.path = path
         //        self.location = location
         self.initScripts = index(getAllScripts())

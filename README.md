@@ -4,7 +4,7 @@
 ![Plattform: v](https://badgen.net/badge/plattform/macOS|Linux/gray)
 ![Swift: v](https://badgen.net/badge/swift/5/orange)
 
-A package for rendering, implementing and running dynamic shell scripts in Swift with leaf-inspired syntax.<br/>
+A package for creating, rendering, implementing and running dynamic shell scripts templates in Swift with leaf-inspired syntax.<br/>
 Modify shell scripts dynamically with Swift and use shell functions in your swift code.
 
 #### Features
@@ -13,7 +13,7 @@ Modify shell scripts dynamically with Swift and use shell functions in your swif
 - [x] export the rendered script or run it directly
 - [x] embed shell script functions in swift code
 - [x] automatically index and embed shell scripts from the bundle or a folder
-- [x] run scripts and command with a timeout handler 
+- [x] run scripts and commands with a timeout handler 
 - [x] get and modify file infos
 
 
@@ -33,7 +33,7 @@ Modify shell scripts dynamically with Swift and use shell functions in your swif
     - [Error only](#error-only)
     - [True False](#true-false)
     - [Realtime output](#realtime-output)
-- [Embed shell scripts in swift](#embed-shell-scripts-in-swift)
+- [Embed shell script functions in swift](#embed-shell-script-functions-in-swift)
 - [Get and modify file info](#get-and-modify-file-info)
 
 ## Short overview 
@@ -356,8 +356,6 @@ print(output)
 ```
 
 
- 
- 
  ### Error only
  Run script and commands and only get the standard error output.
  
@@ -373,19 +371,86 @@ print(output)
 
  
  
- ## Embed shell scripts in swift
+ ## Embed shell script functions in swift
  
+ Easily use your shell script functions inside swift.
+ To use shell script functions in swift you need to create a bridge header in your shell script, that registers the public available functions from your script.  
+ ! The function names must be unique. !
  
+ ````
+ # /* SwiftyShellScript Bridge
+ #
+ # - function: greet //the name of the function 
+ # - function: getData //the name of the function 
+ #
+ # */End 
+ ````
  
+ If you have an app with a bundle, just create in your app bundle a folder named "shellScripts" and move all your scripts in there - you can use sub folders as well. 
+ All the scripts with the extension .sh in this folder will be automatically indexed and the function addressed to the correct script.
  
+ ```swift
+ let result = ShellScripts().function("greet", param: "Thomas")
+ ````
+ 
+ If your project has no bundle, just insert the folder dir of the folder containing all your scripts.
+ 
+ ```swift
+ let result = ShellScripts(URL(fileURLWithPath: "/Users/admin/Scripts")).function("greet", param: "Thomas")
+ ````
+ 
+### example
+
+shell script:
+```
+# /* SwiftyShellScript Bridge
+#
+# - function: greet 
+# - function: say 
+#
+# */End 
+#!/bin/bash
+
+function greet()
+{
+    echo "Hi $1"
+}
+
+say()
+{
+    echo "$1"
+}
+
+"$@"
+exit
+```
+ 
+ in swift: 
+ 
+ ```swift
+ var result = ShellScripts().function("greet", param: "Thomas") // returns Hi Thomas
+     result = ShellScripts().function("say",   param: "\"this is a test\"") // returns Hi Thomas
+ ````
  
 
 
-## script Info
+## Get and modify file info
 
-#### check if file exists:
+get file info: 
+return values are optional - returns nil if files does not exist, or the value can't be read.  
 
 ```swift
-let info = scriptInfo(path: /Users/admin/Documents/test.sh")
-info.checkIfFileExits() // -> Bool
+let info = fileInfo("/Users/admin/Documents/test.sh")
+info.isExecutable() // -> Bool?
+info.isReadable() // -> Bool?
+...
+info.ownerAccountName() //-> String? 
+```
+
+modify file info: 
+
+```swift
+let info = modify("/Users/admin/Documents/test.sh")
+info.chmod(755, .int)
+info.rename(to: "")
 ```
