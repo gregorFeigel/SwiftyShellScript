@@ -429,7 +429,7 @@ exit
  
  ```swift
  var result = ShellScripts().function("greet", param: "Thomas") // returns Hi Thomas
-     result = ShellScripts().function("say",   param: "\"this is a test\"") // returns Hi Thomas
+     result = ShellScripts().function("say",   param: "\"this is a test\"") // returns this is a test
  ````
  
 
