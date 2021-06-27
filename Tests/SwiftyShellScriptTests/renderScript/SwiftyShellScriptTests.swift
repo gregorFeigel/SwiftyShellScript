@@ -1,4 +1,11 @@
-    import XCTest
+//
+//  File.swift
+//
+//  Licence: MIT
+//  Created by Gregor Feigel on 25.06.21.
+//
+
+  import XCTest
     @testable import SwiftyShellScript
     
     /*

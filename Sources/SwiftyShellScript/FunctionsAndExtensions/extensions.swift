@@ -1,8 +1,8 @@
 //
 //  File.swift
-//  
 //
-//  Created by Gregor Feigel on 23.06.21.
+//  Licence: MIT
+//  Created by Gregor Feigel on 25.06.21.
 //
 
 import Foundation

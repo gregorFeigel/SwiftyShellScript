@@ -1,9 +1,10 @@
 //
 //  File.swift
-//  
 //
+//  Licence: MIT
 //  Created by Gregor Feigel on 25.06.21.
 //
+
 
 import Foundation
 import Darwin
