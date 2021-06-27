@@ -22,16 +22,23 @@ Modify shell scripts dynamically with Swift and use shell functions in your swif
 - [Shortoverview](#short-overview)
 - [Installation](#installation)
 - [Create dynamic scripts](#create-dynamic-scripts)
-    -  [Variable](#variable)
+    - [Variable](#variable)
     - [Function](#function)
     - [Custom tag](#custom-tag)
 - [Render scripts](#render-scripts)
+    -  [Export the rendered script](#export-the-rendered-script)
+    -  [Run the rendered script](#run-the-rendered-script)
+- [Run any shell script and command](#run-any-shell-script-and-command)  
+    - [Default](#default)
+    - [Error only](#error-only)
+    - [True False](#true-false)
+    - [Realtime output](#realtime-output)
 - [Embed shell scripts in swift](#embed-shell-scripts-in-swift)
 - [Get and modify file info](#get-and-modify-file-info)
 
 ## Short overview 
 
-## Render and run dynamic shell scripts with swift:
+### Render and run dynamic shell scripts with swift:
 
 shell script: 
 ```
@@ -124,20 +131,22 @@ dependencies: [
 ]
 ```
 
-## Usage
 
-### Create a render set
 
-To render the script, you need to create a render set.
-Therefor you have three task type options:
+## Create dynamic scripts
+
+With the leaf-inspired syntax you can easily create dynamic script templates. 
+The three tag types (var, func and custom) are explained below:
+
 
 #### Variable
 
-A variable is defined by using #(yourVarName) in your shell script.
+A variable is defined by using #(yourVarName) in your shell script. 
 
 ```
 #!/bin/sh
 #(hello) // variable hello
+touch test-#(fileName).txt // variable fileName
 exit
 ```
 
@@ -145,8 +154,17 @@ To initiate your variable, create a render element with the task type .variable:
 The variable name in this example is "hello" and will be replaced with "this is a test variable".
 
 ```swift
-let a = Item(identifier: "hello", input: "this is a test variable", taskType: .variable)
+let a = Item(identifier: "hello", input: "#this is a test variable", taskType: .variable)
+let b = Item(identifier: "fileName", input: "\(NSUserName()!)", taskType: .variable)
 ```
+rendered result:
+```
+#!/bin/sh
+#this is a test variable
+touch test-admin.txt
+exit
+```
+
 
 
 #### Function
@@ -155,7 +173,7 @@ A function is defined by using #yourFunction(functionInput) in your shell script
 
 ```
 #!/bin/sh
-#getDate(yyyy-MM-dd HH:mm:ss) // function "getDate" with input "yyyy-MM-dd HH:mm:ss"
+echo "#getDate(yyyy-MM-dd HH:mm:ss)" // function "getDate" with input "yyyy-MM-dd HH:mm:ss"
 exit
 ```
 
@@ -177,11 +195,11 @@ extension String {
     
 }
 ```
-The rendered script now looks like this:
 
+rendered result:
 ```
 #!/bin/sh
-2021-06-24 10:34:04 - input format: yyyy-MM-dd HH:mm:ss
+echo "2021-06-24 10:34:04 - input format: yyyy-MM-dd HH:mm:ss"
 exit
 ```
 
@@ -191,7 +209,7 @@ With the custom tag you can define anything and replace it with the input parame
 
 ```
 #!/bin/sh
-§§hi // custom tag §§hi
+echo "§§hi" // custom tag §§hi
 exit
 ```
 To initiate your custom tag, create a render element with the task type .custom: <br/>
@@ -200,34 +218,35 @@ The custom tag in this example is "§§hi" and is replaced by "this is a custom 
 ```swift
 let a = Item(identifier: "§§hi", input: "this is a custom tag", taskType: .custom)
 ```
+rendered result:
+```
+#!/bin/sh
+echo "this is a custom tag"
+exit
+```
+ 
 
-#### Create the render set
+## Render scripts
 
-Create the render set by simply putting the individual elements together into an array:
+To render the script, you need to create a render set and then pass the render set into the renderer:
 
 ```swift
+
+// Create the render set by simply adding the individual elements together into an array:
+
 let a = Item(identifier: "test", input: "this is a test variable", taskType: .variable)
 let b = Item(identifier: "test2", input: "this is a second test variable", taskType: .variable)
 let renderSet = [a, b])
-```
 
 
-### Choose the script 
-
-Open the script render by passing the file path: 
-
-```swift
+// select the script
 let script = shellScriptRenderer("/Users/admin/Documents/test.sh")
-```
 
-### Render the script 
-
-Render the script by passing the render set array into the renderer.
-
-```swift
-let script = shellScriptRenderer("/Users/admin/Documents/test.sh")
+// render the script with the render set
 script.render(renderSet)
+
 ```
+ 
 
 ### Export the rendered script
 
@@ -244,16 +263,9 @@ script.exportTo("/Users/admin/Documents/renderedTest.sh", overwrite: .force)
 
 // sensitive 
 script.exportTo("/Users/admin/Documents/renderedTest.sh", overwrite: .sensitive)
-```
 
-### Change file permissions 
 
-Change file permissions by using .chmod(to: ).
-
-```swift
-let script = shellScriptRenderer("/Users/admin/Documents/test.sh")
-script.render(renderSet)
-script.exportTo("/Users/admin/Documents/renderedTest.sh", overwrite: .sensitive)
+/* directly change posix permissions */
 
 // input as int
 script.chmod(to: 755, .int)
@@ -264,6 +276,109 @@ script.chmod(to: 0o755, .octalNumber)
 //input as octal number
 script.chmod(to: 493, .octalNumber)
 ```
+
+
+### Run the rendered script
+
+Run the rendered script directly after rendering.
+The timeout option will force terminate the process if the timeout is reached. 
+The timeout value is set to 300 sec by default. If you want to disable it, you can set the time to .infinity. 
+ 
+ ```swift
+ 
+ let script = shellScriptRenderer("/Users/admin/Documents/test.sh")
+ script.render(renderSet)
+ script.timeout = 60 // time in seconds
+ script.launchPath = "/bin/sh" // by default set to /bin/bash
+ script.arg = "-e" // by default set to -c
+ let output = script.runScript()
+ 
+ print(output.processTime)  // Double - time the process took to complete 
+ print(output.timeoutInterrupt) // Bool - true if timeout terminated the process 
+ print(output.error) // String - error while launching the process 
+ print(output.terminationStatus) // Int32 - process termination status
+ 
+ // shell script output split into standard error and standard output
+ print(output.standardError)  
+ print(output.standardOutput)
+ 
+ ```
+ 
+ ## Run any shell script and command
+
+### Default
+
+Run script and commands and get all informations back.
+
+```swift
+let script = runScript(scriptPath: "/Users/admin/Documents/test.sh")
+script.timeout = 30
+script.launchPath = "/bin/sh" // by default set to /bin/bash
+script.arg = "-e" // by default set to -c
+let output = script.runDefault()
+
+print(output.processTime)  // Double - time the process took to complete 
+print(output.timeoutInterrupt) // Bool - true if timeout terminated the process 
+print(output.error) // String - error while launching the process 
+print(output.terminationStatus) // Int32 - process termination status
+
+// shell script output split into standard error and standard output
+print(output.standardError)  
+print(output.standardOutput)
+```
+
+
+### Realtime output 
+
+ Run script and commands and get the output printed in realtime.
+ ! This does only print the output and returns nothing !
+ 
+ ```swift
+ let script = runScript(scriptPath: "/Users/admin/Documents/test.sh")
+ script.timeout = 30
+ script.launchPath = "/bin/sh" // by default set to /bin/bash
+ script.arg = "-e" // by default set to -c
+ script.shellPrintRealTime()
+ ```
+ 
+
+### True False 
+
+Run script and commands. If the standard error is empty the return value is true 
+
+```swift
+let script = runScript(scriptPath: "/Users/admin/Documents/test.sh")
+script.timeout = 30
+script.launchPath = "/bin/sh" // by default set to /bin/bash
+script.arg = "-e" // by default set to -c
+let output = script.shellBool()
+print(output)
+```
+
+
+ 
+ 
+ ### Error only
+ Run script and commands and only get the standard error output.
+ 
+ ```swift
+ let script = runScript(scriptPath: "/Users/admin/Documents/test.sh")
+ script.timeout = 30
+ script.launchPath = "/bin/sh" // by default set to /bin/bash
+ script.arg = "-e" // by default set to -c
+ let output = script.shellErrorsOnly()
+ print(output)
+ ```
+
+
+ 
+ 
+ ## Embed shell scripts in swift
+ 
+ 
+ 
+ 
+ 
 
 
 ## script Info
