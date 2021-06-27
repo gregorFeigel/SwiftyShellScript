@@ -4,8 +4,8 @@
 ![Plattform: v](https://badgen.net/badge/plattform/macOS|Linux/gray)
 ![Swift: v](https://badgen.net/badge/swift/5/orange)
 
-A package for creating, rendering, implementing and running dynamic shell scripts templates in Swift with leaf-inspired syntax.<br/>
-Modify shell scripts dynamically with Swift and use shell functions in your swift code.
+A package for creating, rendering, implementing and running dynamic shell script templates in Swift with leaf-inspired syntax.<br/>
+Modify shell scripts dynamically with Swift and use shell script functions in your swift code.
 
 #### Features
 
