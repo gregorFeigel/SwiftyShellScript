@@ -9,7 +9,7 @@ Modify shell scripts dynamically with Swift and use shell script functions in yo
 
 #### Features
 
-- [x] use leaf-inspired syntax tags such as #(var), #func(Input) and custom ones to create dynamic shell scripts.
+- [x] use leaf-inspired syntax tags such as #(var), #func(Input) and custom ones to create dynamic shell script templates.
 - [x] export the rendered script or run it directly
 - [x] embed shell script functions in swift code
 - [x] automatically index and embed shell scripts from the bundle or a folder
@@ -21,7 +21,7 @@ Modify shell scripts dynamically with Swift and use shell script functions in yo
 
 - [Shortoverview](#short-overview)
 - [Installation](#installation)
-- [Create dynamic scripts](#create-dynamic-scripts)
+- [Create dynamic script templates](#create-dynamic-script-templates)
     - [Variable](#variable)
     - [Function](#function)
     - [Custom tag](#custom-tag)
@@ -38,7 +38,7 @@ Modify shell scripts dynamically with Swift and use shell script functions in yo
 
 ## Short overview 
 
-### Render and run dynamic shell scripts with swift:
+### Render and run dynamic shell script templates with swift:
 
 shell script: 
 ```
@@ -132,7 +132,7 @@ dependencies: [
 ```
 
 
-## Create dynamic scripts
+## Create dynamic script templates
 
 With the leaf-inspired syntax you can easily create dynamic script templates. 
 The three tag types (var, func and custom) are explained below:
