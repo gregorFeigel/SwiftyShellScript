@@ -31,6 +31,8 @@ Modify shell scripts dynamically with Swift and use shell functions in your swif
 
 ## Short overview 
 
+## Render and run dynamic shell scripts with swift:
+
 shell script: 
 ```
 #!/bin/sh
@@ -41,7 +43,7 @@ touch fileWithCreationDate-#getDate(yyyy-MM-dd).txt // function getDate with inp
 exit
 ```
 
-### Render and run dynamic shell scripts with swift 
+in swift:
 ```swift
 import SwiftyShellScript
 
@@ -78,6 +80,7 @@ echo "Hi $1"
 exit
 ```
 
+in swift:
 ```swift
 ShellScripts("pathToScriptFolder").function("greet", param: "Thomas") // returns "Hi Thomas"
 
