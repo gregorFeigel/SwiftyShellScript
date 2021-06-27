@@ -4,10 +4,44 @@
 ![Plattform: v](https://badgen.net/badge/plattform/macOS|Linux/gray)
 ![Swift: v](https://badgen.net/badge/swift/5/orange)
 
-Dynamic scripting made easy with Swift.<br/>
-Modify shell scripts dynamically with swift and use shell functions in your swift code.
+A package for rendering, implementing and running dynamic shell scripts in Swift with leaf-inspired syntax.<br/>
+Modify shell scripts dynamically with Swift and use shell functions in your swift code.
 
-#### Render and run dynamic shell scripts with swift 
+#### Features
+
+- [x] use leaf-inspired syntax tags such as #(var), #func(Input) and custom ones to create dynamic shell scripts.
+- [x] export the rendered script or run it directly
+- [x] embed shell script functions in swift code
+- [x] automatically index and embed shell scripts from the bundle or a folder
+- [x] run scripts and command with a timeout handler 
+- [x] get and modify file infos
+
+
+#### Table of Contents
+
+- [Shortoverview](#short-overview)
+- [Installation](#installation)
+- [Create dynamic scripts](#create-dynamic-scripts)
+        - [Variable](#variable)
+        - [Function](#function)
+        - [Custom tag](#custom-tag)
+- [Render scripts](#render-scripts)
+- [Embed shell scripts in swift](#embed-shell-scripts-in-swift)
+- [Get and modify file info](#get-and-modify-file-info)
+
+## Short overview 
+
+shell script: 
+```
+#!/bin/sh
+echo "this is a dynamic shell script"
+ls /Documents/testFileName-#(test).txt // variable test
+touch fileWithCreationDate-#getDate(yyyy-MM-dd).txt // function getDate with input "yyyy-MM-dd"
+§§hi // custom tag §§hi
+exit
+```
+
+### Render and run dynamic shell scripts with swift 
 ```swift
 import SwiftyShellScript
 
@@ -31,22 +65,24 @@ let output = script.runScript()
 print(output.standardOutput)
 
 ```
+
+### embed shell script functions in your swift code
+
 shell script: 
 ```
 #!/bin/sh
-echo "this is a dynamic shell script"
-#(test) // variable test
-#getDate() // function getDate
-§§hi // custom tag §§hi
+greet() {
+echo "Hi $1"
+}
+"$@"
 exit
 ```
-### embed shell script functions in your swift code
 
 ```swift
-ShellScripts("pathToScriptFolder").function("greet", param: "thomas") 
+ShellScripts("pathToScriptFolder").function("greet", param: "Thomas") // returns "Hi Thomas"
 
 // add a timeout
-ShellScripts("pathToScriptFolder").function("greet", param: "thomas", timeout: 20) 
+ShellScripts("pathToScriptFolder").function("greet", param: "thomas", timeout: 20) // returns "Hi Thomas"
 ```
 
 ### get file informations and modify them:
@@ -67,9 +103,10 @@ let file = modify("/Users/admin/Documents/test.sh")
 file.rename(to: renamed.txt)
 file.chmod(755, .int)
 ```
-
+ 
 
 ## Installation
+
 ### Swift Package Manager
 Add SwiftyShellScript as a dependency to your `Package.swift`:
 

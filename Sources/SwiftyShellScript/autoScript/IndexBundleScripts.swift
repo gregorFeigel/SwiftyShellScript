@@ -61,9 +61,9 @@ public class ShellScripts {
         
         print(scriptPath)
         
-        modify(scriptPath).chmod(to: 755, .int)
+        _ = modify(scriptPath).chmod(to: 755, .int)
          
-        let shell = mainShell(scriptPath + " " + t + "" + param, launchPath: launchPath, arg: arg, timeOut: timeout!)
+        let shell = mainShell(scriptPath + " " + t + " " + param, launchPath: launchPath, arg: arg, timeOut: timeout!)
         
         
         return shellOutput(standardOutput: shell.output, standardError: shell.error, processTime: shell.duration, timeoutInterrupt: shell.timeoutInterrupt, terminationStatus: shell.exitState, error: "")
