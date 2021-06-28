@@ -108,7 +108,44 @@ class modify {
     }
     
     
+//MARK: - change creation Date
     
+    func creationDate(to: Date) -> Bool {
+        
+        do {
+            
+            var attributes = [FileAttributeKey : Any]()
+            attributes[.creationDate] = to // to
+            
+            try FileManager.default.setAttributes(attributes, ofItemAtPath: path)
+            
+        } catch { return false  }
+        
+        return true
+        
+        
+    }
+    
+    
+    
+    //MARK: - change creation Date
+        
+        func modificationDate(to: Date) -> Bool {
+            
+            do {
+                
+                var attributes = [FileAttributeKey : Any]()
+                attributes[.modificationDate] = to // to
+                
+                try FileManager.default.setAttributes(attributes, ofItemAtPath: path)
+                
+            } catch { return false  }
+            
+            return true
+            
+            
+        }
+        
     //MARK: - check if file exists
     
     
@@ -127,3 +164,6 @@ class modify {
     
     
 }
+
+
+ 

@@ -8,6 +8,7 @@
 
 
 import Foundation
+import CoreServices
 
 
 /**
@@ -26,7 +27,7 @@ private func valueForSelectedKey(_ t: URLResourceKey,  path: URL) -> URLResource
     var item = URLResourceValues() //: Any = (Any).self
     
     do {
-        item = try path.resourceValues(forKeys: [t])
+        item = try path.resourceValues(forKeys: [t]) //setResourceValue(NSNumber(value: true), forKey: URLResourceKey.isExcludedFromBackupKey)
         
     } catch let error {
         print(error.localizedDescription)
@@ -54,6 +55,21 @@ private func valuesForSelectedType(_ t: FileAttributeKey, path: String) -> Any {
     return item
     
 }
+
+//
+//private func mditem() {
+//    
+//    let path = someURL.path
+//    if let mditem = MDItemCreate(nil, path as CFString),
+//       let mdnames = MDItemCopyAttributeNames(mditem),
+//       let mdattrs = MDItemCopyAttributes(mditem, mdnames) as? [String:Any] {
+//        print(mdattrs)
+//        print("Creator: \(mdattrs[kMDItemCreator as String] as? String ?? "Unknown")")
+//    } else {
+//        print("Can't get attributes for \(path)")
+//    }
+//    
+//}
 
 private extension fileInfo  { // public extension String {
     

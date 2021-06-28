@@ -49,8 +49,8 @@ final class testFileInfo: XCTestCase {
         XCTAssertNotNil(tt.isReadable())
         XCTAssertNotNil(tt.isWritable())
         XCTAssertNotNil(tt.isSymbolicLink())
-        
-        
+        XCTAssertNotNil(tt.type())
+ 
     }
     
     func testModify() {
@@ -65,6 +65,47 @@ final class testFileInfo: XCTestCase {
         
         
     }
+    
+    func test_Modify() {
+        
+        // creation date
+        let isoDate = "1960-04-14T10:44:00+0000"
+        let isoDate2 = "3020-04-14T10:44:00+0000"
+
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX") // set locale to reliable US_POSIX
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+        let dd = dateFormatter.date(from:isoDate)!
+        let ddd = dateFormatter.date(from:isoDate2)!
+
+        
+        // modify
+        
+         let ttt = modify(txt)
+        
+        XCTAssertTrue(ttt.modificationDate(to: ddd))
+        XCTAssertTrue(ttt.creationDate(to: dd))
+        
+    }
+    
+    
+    
+    
+    func testMDItem() {
+        
+        //kMDItemLastUsedDate
+        let path = URL(fileURLWithPath: txt).path
+        if let mditem = MDItemCreate(nil, path as CFString),
+           let mdnames = MDItemCopyAttributeNames(mditem),
+           let mdattrs = MDItemCopyAttributes(mditem, mdnames) as? [String:Any] {
+            print(mdattrs)
+            print("Creator: \(mdattrs[kMDItemCreator as String] as? String ?? "Unknown")")
+        } else {
+            print("Can't get attributes for \(path)")
+        }
+        
+    }
+    
     
     func testInvalidPath() {
         
