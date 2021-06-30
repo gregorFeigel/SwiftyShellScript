@@ -4,7 +4,7 @@
 ![Plattform: v](https://badgen.net/badge/plattform/macOS|Linux/gray)
 ![Swift: v](https://badgen.net/badge/swift/5/orange)
 
-![](https://github.com/gregorFeigel/SwiftyShellScript/banner.png) 
+![](https://repository-images.githubusercontent.com/379895344/1ea90c00-d9e7-11eb-8820-7953ae234fb4) 
 
 A package for creating, rendering, implementing and running dynamic shell script templates in Swift with leaf-inspired syntax.<br/>
 Modify shell scripts dynamically with Swift and use shell script functions in your swift code.
